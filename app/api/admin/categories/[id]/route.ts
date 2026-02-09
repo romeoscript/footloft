@@ -10,12 +10,18 @@ export async function PATCH(
     const body = await request.json();
     const { name, image } = body as { name?: string; image?: string | null };
 
-    const data: { name?: string | null; image?: string | null } = {};
-    if (name !== undefined)
-      data.name = typeof name === "string" ? name.trim() : null;
-    if (image !== undefined)
+    const data: { name?: string; image?: string | null } = {};
+    if (
+      name !== undefined &&
+      typeof name === "string" &&
+      name.trim().length > 0
+    ) {
+      data.name = name.trim();
+    }
+    if (image !== undefined) {
       data.image =
         typeof image === "string" ? image : image === null ? null : undefined;
+    }
 
     if (Object.keys(data).length === 0) {
       return NextResponse.json(

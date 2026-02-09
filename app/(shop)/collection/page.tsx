@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState, useCallback } from 'react'
+import React, { useContext, useEffect, useState, useCallback, Suspense } from 'react'
 import Image from 'next/image';
 import Title from '@/components/Title'
 import ProductItem from '@/components/ProductItem'
@@ -22,7 +22,7 @@ interface CategoryItem {
 
 import { useSearchParams } from 'next/navigation';
 
-const Collection = () => {
+const CollectionContent = () => {
 
     const { products, search, showSearch } = useContext(ShopContext);
     const searchParams = useSearchParams();
@@ -295,6 +295,14 @@ const Collection = () => {
         </div>
     )
 
+}
+
+const Collection = () => {
+    return (
+        <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+            <CollectionContent />
+        </Suspense>
+    )
 }
 
 export default Collection
