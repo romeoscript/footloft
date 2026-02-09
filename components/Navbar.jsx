@@ -1,5 +1,6 @@
 "use client";
 import React, { useContext, useState } from "react";
+import Image from "next/image";
 import { assets } from "../assets/assets";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,7 +15,13 @@ const Navbar = () => {
   return (
     <div className="flex items-center justify-between py-5 font-medium">
       <Link href="/">
-        <img className="w-36" src={assets.logo} alt="" />
+        <Image
+          className="w-36"
+          src={assets.logo}
+          alt="Logo"
+          width={144}
+          height={40}
+        />
       </Link>
 
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
@@ -49,23 +56,27 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center gap-6">
-        <img
+        <Image
           onClick={() => {
             setShowSearch(true);
             navigate("/collection");
           }}
           className="w-5 cursor-pointer"
           src={assets.search_icon}
-          alt=""
+          alt="Search"
+          width={20}
+          height={20}
         />
         <div className="group relative">
-          <img
+          <Image
             onClick={() => {
               navigate("/login");
             }}
             className="w-5 cursor-pointer"
             src={assets.profile_icon}
-            alt=""
+            alt="Profile"
+            width={20}
+            height={20}
           />
 
           {/* Dropdown Menu */}
@@ -87,16 +98,24 @@ const Navbar = () => {
           </div>
         </div>
         <Link href="/cart" className="relative">
-          <img className="w-5 min-w-5" src={assets.cart_icon} alt="" />
+          <Image
+            className="w-5 min-w-5"
+            src={assets.cart_icon}
+            alt="Cart"
+            width={20}
+            height={20}
+          />
           <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
             {getCartCount()}
           </p>
         </Link>
-        <img
+        <Image
           onClick={() => setVisble(true)}
           className="w-5 cursor-pointer sm:hidden"
           src={assets.menu_icon}
-          alt=""
+          alt="Menu"
+          width={20}
+          height={20}
         />
       </div>
 
@@ -109,7 +128,13 @@ const Navbar = () => {
             onClick={() => setVisble(false)}
             className="flex items-center gap-4 p-3 "
           >
-            <img className="h-4 rotate-180" src={assets.dropdown_icon} alt="" />
+            <Image
+              className="h-4 rotate-180"
+              src={assets.dropdown_icon}
+              alt="Back"
+              width={16}
+              height={16}
+            />
             <p>Back</p>
           </div>
           <Link

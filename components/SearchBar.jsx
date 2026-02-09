@@ -1,5 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
+import Image from "next/image";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import { usePathname } from "next/navigation";
@@ -28,13 +29,21 @@ const SearchBar = () => {
           type="text"
           placeholder="Search"
         />
-        <img className="w-4" src={assets.search_icon} alt="" />
+        <Image
+          className="w-4"
+          src={assets.search_icon}
+          alt="Search"
+          width={16}
+          height={16}
+        />
       </div>
-      <img
+      <Image
         onClick={() => setShowSearch(false)}
         className="inline w-3 cursor-pointer"
         src={assets.cross_icon}
-        alt=""
+        alt="Close"
+        width={12}
+        height={12}
       />
     </div>
   ) : null;
