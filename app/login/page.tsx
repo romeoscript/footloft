@@ -5,7 +5,7 @@ const Login = () => {
 
     const [currentState, setCurrentState] = useState('Login');
 
-    const onSubmitHandler = async (e) => {
+    const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     }
 

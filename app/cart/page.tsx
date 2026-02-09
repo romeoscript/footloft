@@ -1,15 +1,29 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react'
+import Image from 'next/image';
 import Title from '@/components/Title'
 import { ShopContext } from '@/context/ShopContext'
 import { assets } from '@/assets/assets';
 import CartTotal from '@/components/CartTotal';
 
+interface CartItem {
+    _id: string;
+    size: string;
+    quantity: number;
+}
+
+interface Product {
+    _id: string;
+    name: string;
+    price: number;
+    image: string[];
+}
+
 const Cart = () => {
 
     const { products, currency, navigate, cartItems, updateQuantity } = useContext(ShopContext);
 
-    const [cartData, setCartData] = useState<any[]>([]);
+    const [cartData, setCartData] = useState<CartItem[]>([]);
 
     useEffect(() => {
         const tempData = []
@@ -37,12 +51,12 @@ const Cart = () => {
             <div>
                 {cartData.map((item, index) => {
 
-                    const productData = products.find((product) => product._id === item._id);
+                    const productData = products.find((product: Product) => product._id === item._id);
 
                     return (
                         <div key={index} className='py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4'>
                             <div className='flex items-start gap-6'>
-                                <img className='w-16 sm:w-20' src={productData.image[0]} alt="" />
+                                <Image className='w-16 sm:w-20' src={productData.image[0]} alt="" width={80} height={80} />
                                 <div>
                                     <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
                                     <div className='flex items-center gap-5 mt-2'>
@@ -52,7 +66,7 @@ const Cart = () => {
                                 </div>
                             </div>
                             <input onChange={(e) => e.target.value === '' || e.target.value === '0' ? null : updateQuantity(item._id, item.size, Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} defaultValue={item.quantity} />
-                            <img onClick={() => updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" />
+                            <Image onClick={() => updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" width={20} height={20} />
                         </div>
                     )
 

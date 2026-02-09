@@ -1,22 +1,34 @@
 "use client";
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
+import Image from 'next/image';
 import { useParams } from 'next/navigation'
 import { ShopContext } from '@/context/ShopContext';
 import { assets } from '@/assets/assets';
 import RelatedProducts from '@/components/RelatedProducts';
+
+interface ProductData {
+    _id: string;
+    name: string;
+    price: number;
+    description: string;
+    image: string[];
+    category: string;
+    subCategory: string;
+    sizes: string[];
+}
 
 const Product = () => {
 
     const params = useParams();
     const productId = params?.productId;
     const { products, currency, addToCart } = useContext(ShopContext);
-    const [productData, setProductData] = useState<any>(false);
+    const [productData, setProductData] = useState<ProductData | false>(false);
     const [size, setSize] = useState("")
     const [image, setImage] = useState("")
 
-    const fetchProductData = async () => {
+    const fetchProductData = useCallback(async () => {
 
-        products.map((item) => {
+        products.map((item: ProductData) => {
             if (item._id === productId) {
                 setProductData(item);
                 setImage(item.image[0])
@@ -24,11 +36,11 @@ const Product = () => {
             }
         })
 
-    }
+    }, [productId, products])
 
     useEffect(() => {
         fetchProductData()
-    }, [productId, products]) // Added products dependency
+    }, [fetchProductData])
 
     return productData ? (
         <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
@@ -39,10 +51,10 @@ const Product = () => {
 
                 <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
                     <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
-                        {productData.image.map((item, index) => (<img key={index} onClick={() => setImage(item)} className='w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer' src={item} alt="" />))}
+                        {productData.image.map((item: string, index: number) => (<Image key={index} onClick={() => setImage(item)} className='w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer' src={item} alt="" width={100} height={100} />))}
                     </div>
                     <div className='w-full sm:w-[80%]'>
-                        <img className='w-full h-auto' src={image} alt="" />
+                        <Image className='w-full h-auto' src={image} alt="" width={500} height={500} />
                     </div>
                 </div>
 
@@ -52,11 +64,11 @@ const Product = () => {
 
                     <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
                     <div className='flex items-center gap-1 mt-2'>
-                        <img className='w-3.5' src={assets.star_icon} alt="" />
-                        <img className='w-3.5' src={assets.star_icon} alt="" />
-                        <img className='w-3.5' src={assets.star_icon} alt="" />
-                        <img className='w-3.5' src={assets.star_icon} alt="" />
-                        <img className='w-3.5' src={assets.star_dull_icon} alt="" />
+                        <Image className='w-3.5' src={assets.star_icon} alt="" width={14} height={14} />
+                        <Image className='w-3.5' src={assets.star_icon} alt="" width={14} height={14} />
+                        <Image className='w-3.5' src={assets.star_icon} alt="" width={14} height={14} />
+                        <Image className='w-3.5' src={assets.star_icon} alt="" width={14} height={14} />
+                        <Image className='w-3.5' src={assets.star_dull_icon} alt="" width={14} height={14} />
                         <p className='pl-2'>(122)</p>
                     </div>
                     <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
@@ -64,7 +76,7 @@ const Product = () => {
                     <div className='flex flex-col gap-4 my-8'>
                         <p>Select Size</p>
                         <div className='flex gap-2'>
-                            {productData.sizes.map((item, index) => (<button key={index} onClick={() => setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? "border-orange-500" : ""}`}>{item}</button>))}
+                            {productData.sizes.map((item: string, index: number) => (<button key={index} onClick={() => setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? "border-orange-500" : ""}`}>{item}</button>))}
                         </div>
                     </div>
                     <button onClick={() => addToCart(productData._id, size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>

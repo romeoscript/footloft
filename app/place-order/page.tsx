@@ -1,5 +1,6 @@
 "use client";
 import React, { useContext, useState } from 'react'
+import Image from 'next/image';
 import Title from '@/components/Title'
 import CartTotal from '@/components/CartTotal'
 import { assets } from '@/assets/assets'
@@ -46,11 +47,11 @@ const PlaceOrder = () => {
                     <div className='flex gap-3 flex-col lg:flex-row'>
                         <div onClick={() => setMethod('stripe')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
                             <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'stripe' ? 'bg-green-400' : ''}`}></p>
-                            <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
+                            <Image className='h-5 mx-4' src={assets.stripe_logo} alt="Stripe" />
                         </div>
                         <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
                             <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
-                            <img className='h-5 mx-4' src={assets.razorpay_logo} alt="" />
+                            <Image className='h-5 mx-4' src={assets.razorpay_logo} alt="Razorpay" />
                         </div>
                         <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
                             <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>

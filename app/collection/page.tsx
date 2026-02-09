@@ -1,21 +1,31 @@
 "use client";
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
+import Image from 'next/image';
 import Title from '@/components/Title'
 import ProductItem from '@/components/ProductItem'
 import { ShopContext } from '@/context/ShopContext'
 import { assets } from '@/assets/assets'
 
+interface Product {
+    _id: string;
+    image: string[];
+    name: string;
+    price: number;
+    category: string;
+    subCategory: string;
+}
+
 const Collection = () => {
 
     const { products, search, showSearch } = useContext(ShopContext);
 
-    const [filterProducts, setFilterProducts] = useState<any[]>([]);
+    const [filterProducts, setFilterProducts] = useState<Product[]>([]);
     const [category, setCategory] = useState<string[]>([]);
     const [subCategory, setSubCategory] = useState<string[]>([]);
     const [showFilter, setShowFilter] = useState(false);
     const [sortType, setSortType] = useState('relavent')
 
-    const toggleCategory = (e) => {
+    const toggleCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         if (category.includes(e.target.value)) {
             setCategory(prev => prev.filter(a => a !== e.target.value))
@@ -25,7 +35,7 @@ const Collection = () => {
         }
     }
 
-    const toggleSubCategory = (e) => {
+    const toggleSubCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         if (subCategory.includes(e.target.value)) {
             setSubCategory(prev => prev.filter(a => a !== e.target.value))
@@ -36,29 +46,29 @@ const Collection = () => {
 
     }
 
-    const applyFilter = () => {
+    const applyFilter = useCallback(() => {
 
         let productsCopy = products.slice()
 
         if (showSearch && search) {
-            productsCopy = productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
+            productsCopy = productsCopy.filter((item: Product) => item.name.toLowerCase().includes(search.toLowerCase()))
         }
 
         if (category.length > 0) {
-            productsCopy = productsCopy.filter(item => category.includes(item.category));
+            productsCopy = productsCopy.filter((item: Product) => category.includes(item.category));
         }
 
         if (subCategory.length > 0) {
-            productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory));
+            productsCopy = productsCopy.filter((item: Product) => subCategory.includes(item.subCategory));
         }
 
         setFilterProducts(productsCopy)
 
-    }
+    }, [products, search, showSearch, category, subCategory])
 
-    const sortProduct = async () => {
+    const sortProduct = useCallback(() => {
 
-        let fpCopy = filterProducts.slice();
+        const fpCopy = filterProducts.slice();
 
         switch (sortType) {
             case 'low-high':
@@ -74,15 +84,15 @@ const Collection = () => {
                 break;
         }
 
-    }
+    }, [filterProducts, sortType, applyFilter])
 
     useEffect(() => {
         applyFilter()
-    }, [category, subCategory, search, showSearch])
+    }, [category, subCategory, search, showSearch, applyFilter])
 
     useEffect(() => {
         sortProduct();
-    }, [sortType])
+    }, [sortType, sortProduct])
 
 
     return (
@@ -90,7 +100,7 @@ const Collection = () => {
 
             {/* Filter Options */}
             <div className='min-w-60'>
-                <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS<img className={`h-3 sm:hidden ${showFilter ? ' rotate-90' : ''}`} src={assets.dropdown_icon} alt="" /></p>
+                <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS<Image className={`h-3 sm:hidden ${showFilter ? ' rotate-90' : ''}`} src={assets.dropdown_icon} alt="" width={12} height={12} /></p>
 
                 {/* Category Filter */}
                 <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>

@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Title from "@/components/Title";
 import { assets } from "@/assets/assets";
 import NewsletterBox from "@/components/NewsletterBox";
@@ -11,10 +12,12 @@ const Contact = () => {
             </div>
 
             <div className="my-10 flex flex-col justify-center md:flex-row gap-10 mb-28">
-                <img
+                <Image
                     className="w-full md:max-w-[480px]"
-                    src={assets.contact_img.src}
+                    src={assets.contact_img}
                     alt=""
+                    width={480}
+                    height={480}
                 />
                 <div className="flex flex-col justify-center items-start gap-6">
                     <p className=" font-semibold text-xl text-gray-600">Our Store</p>

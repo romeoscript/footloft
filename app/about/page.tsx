@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import Title from "@/components/Title";
 import { assets } from "@/assets/assets";
@@ -11,10 +12,12 @@ const About = () => {
             </div>
 
             <div className="my-10 flex flex-col md:flex-row gap-16">
-                <img
+                <Image
                     className="w-full md:max-w-[450px]"
-                    src={assets.about_img.src}
+                    src={assets.about_img}
                     alt=""
+                    width={450}
+                    height={450}
                 />
                 <div className="flex flex-col justify-center gap-6 md:w-2/4 text-gray-600">
                     <p>
