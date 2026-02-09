@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState, useCallback } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image';
 import Title from '@/components/Title'
 import ProductItem from '@/components/ProductItem'
@@ -46,7 +46,7 @@ const Collection = () => {
 
     }
 
-    const applyFilter = useCallback(() => {
+    const applyFilter = () => {
 
         let productsCopy = products.slice()
 
@@ -64,9 +64,9 @@ const Collection = () => {
 
         setFilterProducts(productsCopy)
 
-    }, [products, search, showSearch, category, subCategory])
+    }
 
-    const sortProduct = useCallback(() => {
+    const sortProduct = () => {
 
         const fpCopy = filterProducts.slice();
 
@@ -84,15 +84,17 @@ const Collection = () => {
                 break;
         }
 
-    }, [filterProducts, sortType, applyFilter])
+    }
 
     useEffect(() => {
         applyFilter()
-    }, [category, subCategory, search, showSearch, applyFilter])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [category, subCategory, search, showSearch, products])
 
     useEffect(() => {
         sortProduct();
-    }, [sortType, sortProduct])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortType])
 
 
     return (
