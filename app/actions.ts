@@ -7,17 +7,28 @@ import { sendOrderReceipt } from "@/lib/email";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { AuthError } from "next-auth";
+
 export async function signInWithCredentials(email: string, password: string) {
   const trimmed = email.trim().toLowerCase();
   if (!trimmed || !password) return { error: "Email and password required" };
-  const result = await signIn("credentials", {
-    email: trimmed,
-    password,
-    redirect: false,
-  });
-  if (result?.error) return { error: "Invalid email or password" };
-  if (result?.ok) return { success: true };
-  return { error: "Sign in failed" };
+
+  try {
+    await signIn("credentials", {
+      email: trimmed,
+      password,
+      redirect: false,
+    });
+    return { success: true };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      if (error.type === "CredentialsSignin") {
+        return { error: "Invalid email or password" };
+      }
+      return { error: "Something went wrong" };
+    }
+    throw error;
+  }
 }
 
 export async function publishPost(formData: FormData) {
@@ -160,7 +171,7 @@ export async function placeOrder(orderData: {
     });
 
     sendOrderReceipt(order.id).catch((err) =>
-      console.error("Receipt email failed:", err)
+      console.error("Receipt email failed:", err),
     );
 
     revalidatePath("/orders");
