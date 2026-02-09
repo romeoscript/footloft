@@ -15,6 +15,11 @@ interface Product {
     subCategory: string;
 }
 
+interface CategoryItem {
+    id: string;
+    name: string;
+}
+
 import { useSearchParams } from 'next/navigation';
 
 const Collection = () => {
@@ -25,6 +30,25 @@ const Collection = () => {
     const [filterProducts, setFilterProducts] = useState<Product[]>([]);
     const [category, setCategory] = useState<string[]>([]);
     const [subCategory, setSubCategory] = useState<string[]>([]);
+    const [categoryList, setCategoryList] = useState<CategoryItem[]>([]);
+    const [subCategoryList, setSubCategoryList] = useState<CategoryItem[]>([]);
+
+    useEffect(() => {
+        const fetchFilters = async () => {
+            try {
+                const [catRes, subRes] = await Promise.all([
+                    fetch("/api/categories").then((r) => r.json()),
+                    fetch("/api/subcategories").then((r) => r.json()),
+                ]);
+                if (!catRes.error) setCategoryList(Array.isArray(catRes) ? catRes : []);
+                if (!subRes.error) setSubCategoryList(Array.isArray(subRes) ? subRes : []);
+            } catch {
+                setCategoryList([]);
+                setSubCategoryList([]);
+            }
+        };
+        fetchFilters();
+    }, []);
 
     useEffect(() => {
         const cat = searchParams.get('category');
@@ -186,17 +210,17 @@ const Collection = () => {
                 {/* Filter Controls */}
                 <div className={`${showFilter ? 'block' : 'hidden'} sm:block space-y-10 animate-fade-in px-2 sm:px-0`}>
 
-                    {/* Category Filter Group */}
+                    {/* Category Filter Group - dynamic from API */}
                     <div className='bg-white'>
                         <h3 className='text-[10px] font-extrabold uppercase tracking-[0.3em] mb-6 text-gray-300'>Categories</h3>
                         <div className='grid grid-cols-2 sm:grid-cols-1 gap-y-4 gap-x-2'>
-                            {["Men", "Women", "Kids"].map((cat) => (
-                                <label key={cat} className='flex items-center group cursor-pointer'>
+                            {categoryList.map((cat) => (
+                                <label key={cat.id} className='flex items-center group cursor-pointer'>
                                     <div className='relative flex items-center justify-center'>
                                         <input
                                             type="checkbox"
-                                            value={cat}
-                                            checked={category.includes(cat)}
+                                            value={cat.name}
+                                            checked={category.includes(cat.name)}
                                             onChange={toggleCategory}
                                             className='peer appearance-none w-5 h-5 border border-gray-200 rounded-[2px] cursor-pointer transition-all duration-300 checked:bg-[#1a1a1a] checked:border-[#1a1a1a]'
                                         />
@@ -205,24 +229,24 @@ const Collection = () => {
                                         </svg>
                                     </div>
                                     <span className='ml-4 text-[12px] font-outfit uppercase tracking-widest text-gray-500 group-hover:text-[#1a1a1a] transition-all duration-300 select-none'>
-                                        {cat}
+                                        {cat.name}
                                     </span>
                                 </label>
                             ))}
                         </div>
                     </div>
 
-                    {/* Type Filter Group */}
+                    {/* Type Filter Group - dynamic from API */}
                     <div className='bg-white pt-8 border-t border-gray-50'>
                         <h3 className='text-[10px] font-extrabold uppercase tracking-[0.3em] mb-6 text-gray-300'>Apparel Type</h3>
                         <div className='grid grid-cols-2 sm:grid-cols-1 gap-y-4 gap-x-2'>
-                            {["Topwear", "Bottomwear", "Winterwear", "Footwear"].map((sub) => (
-                                <label key={sub} className='flex items-center group cursor-pointer'>
+                            {subCategoryList.map((sub) => (
+                                <label key={sub.id} className='flex items-center group cursor-pointer'>
                                     <div className='relative flex items-center justify-center'>
                                         <input
                                             type="checkbox"
-                                            value={sub}
-                                            checked={subCategory.includes(sub)}
+                                            value={sub.name}
+                                            checked={subCategory.includes(sub.name)}
                                             onChange={toggleSubCategory}
                                             className='peer appearance-none w-5 h-5 border border-gray-200 rounded-[2px] cursor-pointer transition-all duration-300 checked:bg-[#1a1a1a] checked:border-[#1a1a1a]'
                                         />
@@ -231,7 +255,7 @@ const Collection = () => {
                                         </svg>
                                     </div>
                                     <span className='ml-4 text-[12px] font-outfit uppercase tracking-widest text-gray-500 group-hover:text-[#1a1a1a] transition-all duration-300 select-none'>
-                                        {sub}
+                                        {sub.name}
                                     </span>
                                 </label>
                             ))}

@@ -3,18 +3,25 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
+    if (typeof (prisma as { subCategory?: { findMany: unknown } }).subCategory?.findMany !== "function") {
+      return NextResponse.json(
+        { error: "Prisma client missing SubCategory. Run: npx prisma generate, then restart the dev server." },
+        { status: 503 }
+      );
+    }
     const subCategories = await prisma.subCategory.findMany({
       orderBy: {
         name: "asc",
       },
     });
     return NextResponse.json(subCategories);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error fetching sub-categories:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    const message =
+      process.env.NODE_ENV === "development" && error instanceof Error
+        ? error.message
+        : "Internal Server Error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

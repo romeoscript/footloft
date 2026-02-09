@@ -143,6 +143,9 @@ const products = products_raw.map((p) => ({
   images: p.images.map((img) => getUrl(img)),
 }));
 
+const CATEGORY_NAMES = ["Men", "Women", "Kids"];
+const SUBCATEGORY_NAMES = ["Topwear", "Bottomwear", "Winterwear", "Footwear"];
+
 async function main() {
   console.log("Seeding database...");
 
@@ -152,6 +155,16 @@ async function main() {
   await prisma.product.deleteMany();
   await prisma.post.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.subCategory.deleteMany();
+  await prisma.category.deleteMany();
+
+  // Seed categories and subcategories (for admin and dynamic filters)
+  for (const name of CATEGORY_NAMES) {
+    await prisma.category.create({ data: { name } });
+  }
+  for (const name of SUBCATEGORY_NAMES) {
+    await prisma.subCategory.create({ data: { name } });
+  }
 
   // Create products
   for (const p of products) {
