@@ -1,12 +1,16 @@
 "use client";
 import React, { useContext } from "react";
-import { category_data, products } from "../assets/assets";
+import { category_data, products as assets_products } from "../assets/assets";
+import { ShopContext } from "../context/ShopContext";
 import Image from "next/image";
 import Link from "next/link";
 
 const CategorySection = () => {
+  const { products } = useContext(ShopContext);
+
   // Calculate product counts
   const getProductCount = (name) => {
+    if (!products) return 0;
     if (name === "Footwear") {
       return products.filter((p) => p.subCategory === "Footwear").length;
     }

@@ -1,0 +1,58 @@
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
+    const subCategory = searchParams.get("subcategory");
+    const bestseller = searchParams.get("bestseller");
+    const search = searchParams.get("search");
+
+    const where: any = {};
+
+    if (category) {
+      where.category = {
+        in: category.split(","),
+      };
+    }
+
+    if (subCategory) {
+      where.subCategory = {
+        in: subCategory.split(","),
+      };
+    }
+
+    if (bestseller === "true") {
+      where.bestseller = true;
+    }
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const products = await prisma.product.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Convert BigInt to Number for JSON serialization
+    const serializedProducts = products.map((product) => ({
+      ...product,
+      date: product.date ? Number(product.date) : null,
+    }));
+
+    return NextResponse.json(serializedProducts);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}

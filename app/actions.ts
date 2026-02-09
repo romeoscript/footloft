@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { containsProfanity } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { nanoid } from "nanoid";
 
 export async function publishPost(formData: FormData) {
   const session = await auth();
@@ -98,4 +99,44 @@ export async function saveDraft(formData: FormData) {
   revalidatePath(`/posts/${post.id}`);
   revalidatePath("/posts");
   redirect(`/posts/${post.id}`);
+}
+
+export async function placeOrder(orderData: {
+  amount: number;
+  address: any;
+  items: Array<{
+    productId: string;
+    quantity: number;
+    size: string;
+    price: number;
+  }>;
+  paymentMethod: string;
+}) {
+  const session = await auth();
+  const userId = session?.user ? parseInt(session.user.id!) : null;
+
+  try {
+    const order = await prisma.order.create({
+      data: {
+        userId,
+        amount: orderData.amount,
+        address: orderData.address,
+        paymentMethod: orderData.paymentMethod,
+        items: {
+          create: orderData.items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            size: item.size,
+            price: item.price,
+          })),
+        },
+      },
+    });
+
+    revalidatePath("/orders");
+    return { success: true, orderId: order.id };
+  } catch (error) {
+    console.error("Order error:", error);
+    return { success: false, error: "Failed to place order" };
+  }
 }
