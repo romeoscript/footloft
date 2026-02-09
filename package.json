@@ -16,12 +16,14 @@
     "@auth/prisma-adapter": "^2.7.4",
     "@prisma/client": "6.3.0",
     "@prisma/extension-accelerate": "^1.2.1",
+    "axios": "^1.13.5",
     "nanoid": "^5.1.6",
     "next": "15.1.5",
     "next-auth": "^5.0.0-beta.25",
     "obscenity": "0.4.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-toastify": "^11.0.5",
     "zod": "^4.3.5"
   },
   "devDependencies": {
