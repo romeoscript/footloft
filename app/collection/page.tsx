@@ -157,36 +157,90 @@ const Collection = () => {
     }, [loadMore]);
 
     return (
-        <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
+        <div className='flex flex-col sm:flex-row gap-8 pt-6 border-t border-gray-100'>
 
-            {/* Filter Options */}
-            <div className='min-w-60'>
-                <p onClick={() => setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS<Image className={`h-3 sm:hidden ${showFilter ? ' rotate-90' : ''}`} src={assets.dropdown_icon} alt="" width={12} height={12} /></p>
-
-                {/* Category Filter */}
-                <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
-                    <p className='mb-3 text-sm font-medium'>CATEGORIES</p>
-                    <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-                        <p className='flex gap-2'><input className='w-3' value={"Men"} checked={category.includes("Men")} onChange={toggleCategory} type="checkbox" /> Men </p>
-                        <p className='flex gap-2'><input className='w-3' value={"Women"} checked={category.includes("Women")} onChange={toggleCategory} type="checkbox" /> Women </p>
-                        <p className='flex gap-2'><input className='w-3' value={"Kids"} checked={category.includes("Kids")} onChange={toggleCategory} type="checkbox" /> Kids </p>
+            {/* Filter Panel */}
+            <div className='min-w-[240px]'>
+                {/* Mobile Filter Header */}
+                <div
+                    onClick={() => setShowFilter(!showFilter)}
+                    className='flex items-center justify-between py-4 px-5 bg-[#fbfbfb] border border-gray-100 rounded-sm cursor-pointer sm:hidden mb-4 active:bg-gray-100 transition-colors'
+                >
+                    <div className='flex items-center gap-3'>
+                        <span className='text-[10px] font-bold uppercase tracking-[0.3em] text-[#1a1a1a]'>Show Filters</span>
+                        <div className='flex gap-1'>
+                            {(category.length > 0 || subCategory.length > 0) && (
+                                <span className='w-1.5 h-1.5 bg-[#1a1a1a] rounded-full'></span>
+                            )}
+                        </div>
                     </div>
+                    <Image
+                        className={`h-2.5 transition-transform duration-500 ease-in-out ${showFilter ? 'rotate-180' : ''}`}
+                        src={assets.dropdown_icon}
+                        alt="dropdown"
+                        width={10}
+                        height={10}
+                    />
                 </div>
 
-                {/* Sub Category Filter */}
-                <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
-                    <p className='mb-3 text-sm font-medium'>TYPE</p>
-                    <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-                        <p className='flex gap-2'><input className='w-3' value={"Topwear"} checked={subCategory.includes("Topwear")} onChange={toggleSubCategory} type="checkbox" /> Topwear </p>
-                        <p className='flex gap-2'><input className='w-3' value={"Bottomwear"} checked={subCategory.includes("Bottomwear")} onChange={toggleSubCategory} type="checkbox" /> Bottomwear </p>
-                        <p className='flex gap-2'><input className='w-3' value={"Winterwear"} checked={subCategory.includes("Winterwear")} onChange={toggleSubCategory} type="checkbox" /> Winterwear </p>
-                        <p className='flex gap-2'><input className='w-3' value={"Footwear"} checked={subCategory.includes("Footwear")} onChange={toggleSubCategory} type="checkbox" /> Footwear </p>
+                {/* Filter Controls */}
+                <div className={`${showFilter ? 'block' : 'hidden'} sm:block space-y-10 animate-fade-in px-2 sm:px-0`}>
+
+                    {/* Category Filter Group */}
+                    <div className='bg-white'>
+                        <h3 className='text-[10px] font-extrabold uppercase tracking-[0.3em] mb-6 text-gray-300'>Categories</h3>
+                        <div className='grid grid-cols-2 sm:grid-cols-1 gap-y-4 gap-x-2'>
+                            {["Men", "Women", "Kids"].map((cat) => (
+                                <label key={cat} className='flex items-center group cursor-pointer'>
+                                    <div className='relative flex items-center justify-center'>
+                                        <input
+                                            type="checkbox"
+                                            value={cat}
+                                            checked={category.includes(cat)}
+                                            onChange={toggleCategory}
+                                            className='peer appearance-none w-5 h-5 border border-gray-200 rounded-[2px] cursor-pointer transition-all duration-300 checked:bg-[#1a1a1a] checked:border-[#1a1a1a]'
+                                        />
+                                        <svg className='absolute w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity duration-300' fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <span className='ml-4 text-[12px] font-outfit uppercase tracking-widest text-gray-500 group-hover:text-[#1a1a1a] transition-all duration-300 select-none'>
+                                        {cat}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
                     </div>
 
+                    {/* Type Filter Group */}
+                    <div className='bg-white pt-8 border-t border-gray-50'>
+                        <h3 className='text-[10px] font-extrabold uppercase tracking-[0.3em] mb-6 text-gray-300'>Apparel Type</h3>
+                        <div className='grid grid-cols-2 sm:grid-cols-1 gap-y-4 gap-x-2'>
+                            {["Topwear", "Bottomwear", "Winterwear", "Footwear"].map((sub) => (
+                                <label key={sub} className='flex items-center group cursor-pointer'>
+                                    <div className='relative flex items-center justify-center'>
+                                        <input
+                                            type="checkbox"
+                                            value={sub}
+                                            checked={subCategory.includes(sub)}
+                                            onChange={toggleSubCategory}
+                                            className='peer appearance-none w-5 h-5 border border-gray-200 rounded-[2px] cursor-pointer transition-all duration-300 checked:bg-[#1a1a1a] checked:border-[#1a1a1a]'
+                                        />
+                                        <svg className='absolute w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity duration-300' fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                    <span className='ml-4 text-[12px] font-outfit uppercase tracking-widest text-gray-500 group-hover:text-[#1a1a1a] transition-all duration-300 select-none'>
+                                        {sub}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {/* Right Side */}
+            {/* Right Side - Product Grid */}
             <div className='flex-1'>
 
                 <div className='flex justify-between text-base sm:text-2xl mb-4'>
