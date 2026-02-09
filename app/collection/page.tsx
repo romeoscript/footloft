@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import Image from 'next/image';
 import Title from '@/components/Title'
 import ProductItem from '@/components/ProductItem'
@@ -97,6 +97,53 @@ const Collection = () => {
     }, [sortType])
 
 
+
+    const [visibleProducts, setVisibleProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    // Initialize visible products when filterProducts changes
+    useEffect(() => {
+        if (filterProducts.length > 0) {
+            setVisibleProducts(filterProducts.slice(0, 10));
+        } else {
+            setVisibleProducts([]);
+        }
+    }, [filterProducts]);
+
+    const loadMore = useCallback(() => {
+        if (loading || visibleProducts.length >= filterProducts.length) return;
+
+        setLoading(true);
+        // Simulate network delay for smoother feel, or just append immediately
+        setTimeout(() => {
+            const nextBatch = filterProducts.slice(visibleProducts.length, visibleProducts.length + 10);
+            setVisibleProducts(prev => [...prev, ...nextBatch]);
+            setLoading(false);
+        }, 500);
+    }, [loading, visibleProducts.length, filterProducts]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMore();
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        const sentinel = document.getElementById('sentinel');
+        if (sentinel) {
+            observer.observe(sentinel);
+        }
+
+        return () => {
+            if (sentinel) {
+                observer.unobserve(sentinel);
+            }
+        };
+    }, [loadMore]);
+
     return (
         <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
 
@@ -143,14 +190,20 @@ const Collection = () => {
                 {/* Map Products */}
                 <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 animate-fade-in'>
                     {
-                        filterProducts.map((item, index) => (
+                        visibleProducts.map((item, index) => (
                             <ProductItem key={index} id={item._id} image={item.image} name={item.name} price={item.price} />
                         ))
                     }
                 </div>
+
+                {/* Sentinel for Infinite Scroll */}
+                <div id="sentinel" className="h-10 w-full flex justify-center items-center mt-10">
+                    {loading && <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>}
+                </div>
             </div>
         </div>
     )
+
 }
 
 export default Collection
