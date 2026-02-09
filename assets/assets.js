@@ -59,6 +59,9 @@ import shoe_img3 from './luxury_white_sneaker_1770637025828.png'
 import hero_shoe_1 from './hero_shoe_1.png'
 import hero_shoe_2 from './hero_shoe_2.png'
 import hero_shoe_3 from './hero_shoe_3.png'
+import category_men from './category_men.png'
+import category_women from './category_women.png'
+import category_footwear from './category_footwear.png'
 
 
 import logo from './logo.png'
@@ -101,8 +104,29 @@ export const assets = {
     cross_icon,
     hero_shoe_1,
     hero_shoe_2,
-    hero_shoe_3
+    hero_shoe_3,
+    category_men,
+    category_women,
+    category_footwear
 }
+
+export const category_data = [
+    {
+        name: "Men",
+        image: category_men,
+        link: "/collection?category=Men"
+    },
+    {
+        name: "Women",
+        image: category_women,
+        link: "/collection?category=Women"
+    },
+    {
+        name: "Footwear",
+        image: category_footwear,
+        link: "/collection?subcategory=Footwear"
+    }
+]
 
 export const hero_slides = [
     {

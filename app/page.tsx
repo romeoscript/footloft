@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero'
+import CategorySection from '@/components/CategorySection'
 import LatestCollection from '@/components/LatestCollection'
 import BestSeller from '@/components/BestSeller'
 import OurPolicy from '@/components/OurPolicy'
@@ -8,6 +9,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <CategorySection />
       <LatestCollection />
       <BestSeller />
       <OurPolicy />
