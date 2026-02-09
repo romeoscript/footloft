@@ -7,148 +7,243 @@ import { usePathname } from "next/navigation";
 import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
-  const [visible, setVisble] = useState(false);
+  const [visible, setVisible] = useState(false);
   const pathname = usePathname();
 
   const { setShowSearch, navigate, getCartCount } = useContext(ShopContext);
 
   return (
-    <div className="flex items-center justify-between py-5 font-medium sticky top-0 z-50 bg-white/80 backdrop-blur-md transition-all">
-      <Link href="/">
-        <Image
-          className="w-36"
-          src={assets.logo}
-          alt="Logo"
-          width={144}
-          height={40}
-          priority
-        />
-      </Link>
+    <>
+      <div className="flex items-center justify-between py-5 font-medium sticky top-0 z-50 bg-white/80 backdrop-blur-md transition-all px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+        <Link href="/">
+          <Image
+            className="w-36"
+            src={assets.logo}
+            alt="Logo"
+            width={144}
+            height={40}
+            priority
+          />
+        </Link>
 
-      <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
-        <NavLink href="/" label="HOME" pathname={pathname} />
-        <NavLink href="/collection" label="COLLECTION" pathname={pathname} />
-        <NavLink href="/about" label="ABOUT" pathname={pathname} />
-        <NavLink href="/contact" label="CONTACT" pathname={pathname} />
-      </ul>
+        <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
+          <NavLink href="/" label="HOME" pathname={pathname} />
+          <NavLink href="/collection" label="COLLECTION" pathname={pathname} />
+          <NavLink href="/about" label="ABOUT" pathname={pathname} />
+          <NavLink href="/contact" label="CONTACT" pathname={pathname} />
+        </ul>
 
-      <div className="flex items-center gap-6">
-        <Image
-          onClick={() => {
-            setShowSearch(true);
-            navigate("/collection");
-          }}
-          className="w-5 cursor-pointer"
-          src={assets.search_icon}
-          alt="Search"
-          width={20}
-          height={20}
-        />
-        <div className="group relative">
+        <div className="flex items-center gap-6">
           <Image
             onClick={() => {
-              navigate("/login");
+              setShowSearch(true);
+              navigate("/collection");
             }}
             className="w-5 cursor-pointer"
-            src={assets.profile_icon}
-            alt="Profile"
+            src={assets.search_icon}
+            alt="Search"
             width={20}
             height={20}
           />
+          <div className="group relative">
+            <Image
+              onClick={() => {
+                navigate("/login");
+              }}
+              className="w-5 cursor-pointer"
+              src={assets.profile_icon}
+              alt="Profile"
+              width={20}
+              height={20}
+            />
 
-          {/* Dropdown Menu */}
-          <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-            <div className="flex flex-col gap-2 w-36 py-3 px-5  bg-slate-100 text-gray-500 rounded">
-              <p onClick={() => {}} className="cursor-pointer hover:text-black">
-                My Profile
-              </p>
-              <p
-                onClick={() => navigate("/orders")}
-                className="cursor-pointer hover:text-black"
+            {/* Dropdown Menu */}
+            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+              <div className="flex flex-col gap-2 w-36 py-3 px-5  bg-slate-100 text-gray-500 rounded">
+                <p
+                  onClick={() => {}}
+                  className="cursor-pointer hover:text-black"
+                >
+                  My Profile
+                </p>
+                <p
+                  onClick={() => navigate("/orders")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Orders
+                </p>
+                <p
+                  onClick={() => {}}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Logout
+                </p>
+              </div>
+            </div>
+          </div>
+          <Link href="/cart" className="relative">
+            <Image
+              className="w-5 min-w-5"
+              src={assets.cart_icon}
+              alt="Cart"
+              width={20}
+              height={20}
+            />
+            <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
+              {getCartCount()}
+            </p>
+          </Link>
+          <Image
+            onClick={() => setVisible(true)}
+            className="w-5 cursor-pointer sm:hidden"
+            src={assets.menu_icon}
+            alt="Menu"
+            width={20}
+            height={20}
+          />
+        </div>
+      </div>
+
+      {/* Sidebar Menu For Small Screens - Moved OUTSIDE for full-screen visibility */}
+      <div
+        className={`fixed top-0 right-0 bottom-0 overflow-hidden bg-white z-[1000] transition-all duration-500 ease-in-out shadow-2xl ${visible ? "w-full sm:w-[380px]" : "w-0"}`}
+      >
+        <div className="flex flex-col h-screen bg-white text-gray-800">
+          {/* Menu Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-50">
+            <Image
+              className="w-28 opacity-90"
+              src={assets.logo}
+              alt="Logo"
+              width={112}
+              height={32}
+            />
+            <div
+              onClick={() => setVisible(false)}
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors"
+            >
+              <Image
+                className="w-3"
+                src={assets.cross_icon}
+                alt="Close"
+                width={12}
+                height={12}
+              />
+            </div>
+          </div>
+
+          {/* User Actions Section */}
+          <div className="px-8 py-8 flex flex-col gap-6 bg-[#fbfbfb]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400">
+              Account & Activity
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div
+                onClick={() => {
+                  navigate("/login");
+                  setVisible(false);
+                }}
+                className="flex flex-col gap-2 p-4 bg-white border border-gray-100 rounded-sm hover:border-gray-300 transition-all cursor-pointer group"
               >
-                Orders
-              </p>
-              <p onClick={() => {}} className="cursor-pointer hover:text-black">
-                Logout
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={assets.profile_icon}
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="opacity-70 group-hover:opacity-100"
+                  />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#1a1a1a]">
+                    Profile
+                  </span>
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  navigate("/orders");
+                  setVisible(false);
+                }}
+                className="flex flex-col gap-2 p-4 bg-white border border-gray-100 rounded-sm hover:border-gray-300 transition-all cursor-pointer group"
+              >
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={assets.cart_icon}
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="opacity-70 group-hover:opacity-100"
+                  />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#1a1a1a]">
+                    Orders
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="flex flex-col flex-1 px-8 py-10 gap-1 overflow-y-auto">
+            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400 mb-6">
+              Explore Collections
+            </p>
+
+            <MobileNavLink
+              href="/"
+              label="Home"
+              onClick={() => setVisible(false)}
+            />
+            <MobileNavLink
+              href="/collection"
+              label="Collections"
+              onClick={() => setVisible(false)}
+            />
+            <MobileNavLink
+              href="/about"
+              label="Our Story"
+              onClick={() => setVisible(false)}
+            />
+            <MobileNavLink
+              href="/contact"
+              label="Contact Us"
+              onClick={() => setVisible(false)}
+            />
+          </div>
+
+          {/* Footer of Sidebar */}
+          <div className="p-8 border-t border-gray-50 bg-[#fbfbfb]">
+            <div className="flex items-center gap-4 opacity-50">
+              <p className="text-[9px] font-bold tracking-[0.1em] uppercase">
+                © 2026 FOOTLOFT BOUTIQUE
               </p>
             </div>
           </div>
         </div>
-        <Link href="/cart" className="relative">
-          <Image
-            className="w-5 min-w-5"
-            src={assets.cart_icon}
-            alt="Cart"
-            width={20}
-            height={20}
-          />
-          <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
-            {getCartCount()}
-          </p>
-        </Link>
-        <Image
-          onClick={() => setVisble(true)}
-          className="w-5 cursor-pointer sm:hidden"
-          src={assets.menu_icon}
-          alt="Menu"
-          width={20}
-          height={20}
-        />
       </div>
-
-      {/* Sidebar Menu For Small Screens */}
-      <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? "w-full" : "w-0"}`}
-      >
-        <div className="flex flex-col text-gray-600">
-          <div
-            onClick={() => setVisble(false)}
-            className="flex items-center gap-4 p-3 "
-          >
-            <Image
-              className="h-4 rotate-180"
-              src={assets.dropdown_icon}
-              alt="Back"
-              width={16}
-              height={16}
-            />
-            <p>Back</p>
-          </div>
-          <Link
-            onClick={() => setVisble(false)}
-            href="/"
-            className="py-2 pl-6 border"
-          >
-            HOME
-          </Link>
-          <Link
-            onClick={() => setVisble(false)}
-            href="/collection"
-            className="py-2 pl-6 border"
-          >
-            COLLECTION
-          </Link>
-          <Link
-            onClick={() => setVisble(false)}
-            href="/about"
-            className="py-2 pl-6 border"
-          >
-            ABOUT
-          </Link>
-          <Link
-            onClick={() => setVisble(false)}
-            href="/contact"
-            className="py-2 pl-6 border"
-          >
-            CONTACT
-          </Link>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
 export default Navbar;
+
+// Mobile Navigation Link Component
+const MobileNavLink = ({ href, label, onClick }) => (
+  <Link
+    onClick={onClick}
+    href={href}
+    className="group flex items-center justify-between py-4 border-b border-gray-50 last:border-none"
+  >
+    <span className="text-[15px] font-outfit font-light tracking-[0.05em] text-gray-700 group-hover:text-black transition-colors uppercase">
+      {label}
+    </span>
+    <Image
+      src={assets.dropdown_icon}
+      className="-rotate-90 opacity-20 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+      alt=""
+      width={12}
+      height={12}
+    />
+  </Link>
+);
 
 const NavLink = ({ href, label, pathname }) => (
   <Link href={href} className="flex flex-col items-center gap-1 group">
