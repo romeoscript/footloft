@@ -10,15 +10,24 @@ export async function PATCH(
     const body = await request.json();
     const { name, image } = body as { name?: string; image?: string | null };
 
-    const data: { name?: string; image?: string | null } = {};
-    if (name !== undefined) data.name = typeof name === "string" ? name.trim() : null;
-    if (image !== undefined) data.image = typeof image === "string" ? image : image === null ? null : undefined;
+    const data: { name?: string | null; image?: string | null } = {};
+    if (name !== undefined)
+      data.name = typeof name === "string" ? name.trim() : null;
+    if (image !== undefined)
+      data.image =
+        typeof image === "string" ? image : image === null ? null : undefined;
 
     if (Object.keys(data).length === 0) {
-      return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No fields to update" },
+        { status: 400 },
+      );
     }
     if (data.name !== undefined && !data.name) {
-      return NextResponse.json({ error: "Name cannot be empty" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Name cannot be empty" },
+        { status: 400 },
+      );
     }
 
     const category = await prisma.category.update({
@@ -31,10 +40,16 @@ export async function PATCH(
     console.error("Error updating category:", error);
     const err = error as { code?: string };
     if (err.code === "P2025") {
-      return NextResponse.json({ error: "Category not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 },
+      );
     }
     if (err.code === "P2002") {
-      return NextResponse.json({ error: "Category name already exists" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Category name already exists" },
+        { status: 400 },
+      );
     }
     return NextResponse.json(
       { error: "Internal Server Error" },
