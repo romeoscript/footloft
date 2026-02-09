@@ -4,15 +4,20 @@ import prisma from "@/lib/prisma";
 export async function GET() {
   try {
     const subCategories = await prisma.subCategory.findMany({
-      orderBy: { name: "asc" },
+      orderBy: {
+        name: "asc",
+      },
+      select: {
+        id: true,
+        name: true,
+      },
     });
     return NextResponse.json(subCategories);
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Error fetching sub-categories:", error);
-    const message =
-      process.env.NODE_ENV === "development" && error instanceof Error
-        ? error.message
-        : "Internal Server Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

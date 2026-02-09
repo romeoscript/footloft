@@ -7,15 +7,30 @@ import Link from "next/link";
 
 const CategorySection = () => {
   const { products } = useContext(ShopContext);
+  const [categories, setCategories] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   // Calculate product counts
   const getProductCount = (name) => {
     if (!products) return 0;
-    if (name === "Footwear") {
-      return products.filter((p) => p.subCategory === "Footwear").length;
-    }
     return products.filter((p) => p.category === name).length;
   };
+
+  if (categories.length === 0) return null;
 
   return (
     <div className="my-10 px-4 sm:px-0">
@@ -33,19 +48,25 @@ const CategorySection = () => {
 
       {/* Category List - Tiny Circles */}
       <div className="flex justify-center gap-4 md:gap-12 lg:gap-20 mt-2 flex-wrap">
-        {category_data.map((item, index) => (
+        {categories.map((item, index) => (
           <Link
             key={index}
-            href={item.link}
+            href={`/collection?category=${item.name}`}
             className="flex flex-col items-center gap-3 group"
           >
-            <div className="relative w-24 h-24 md:w-48 md:h-48 lg:w-60 lg:h-60 rounded-full overflow-hidden border-2 border-white shadow-xl transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105 group-hover:border-gray-200">
-              <Image
-                src={item.image}
-                alt={item.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-              />
+            <div className="relative w-24 h-24 md:w-48 md:h-48 lg:w-60 lg:h-60 rounded-full overflow-hidden border-2 border-white shadow-xl transition-all duration-500 group-hover:shadow-2xl group-hover:scale-105 group-hover:border-gray-200 bg-gray-100">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-xl">
+                  {item.name[0]}
+                </div>
+              )}
               <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
             </div>
             <div className="text-center">

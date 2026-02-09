@@ -33,6 +33,52 @@ export async function GET(
   }
 }
 
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const {
+      name,
+      description,
+      price,
+      category,
+      subCategory,
+      bestseller,
+      sizes,
+      images,
+    } = body;
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        description,
+        price: Number(price),
+        category,
+        subCategory,
+        bestseller: Boolean(bestseller),
+        sizes,
+        images,
+      },
+    });
+
+    const serializedProduct = {
+      ...product,
+      date: product.date != null ? Number(product.date) : null,
+    };
+    return NextResponse.json({ success: true, product: serializedProduct });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },

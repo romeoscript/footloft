@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Product {
     id: string;
@@ -87,7 +88,27 @@ const ListProducts = () => {
                             <p className="hidden md:block font-bold">
                                 ${item.price.toFixed(2)}
                             </p>
-                            <div className="flex justify-center">
+                            <div className="flex justify-center gap-2">
+                                <Link
+                                    href={`/admin/product/${item.id}`}
+                                    className="bg-blue-50 text-blue-600 p-2 rounded-full hover:bg-blue-600 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                                    aria-label="Edit Product"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="18"
+                                        height="18"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                        <path d="m15 5 4 4" />
+                                    </svg>
+                                </Link>
                                 <button
                                     onClick={() => removeProduct(item.id)}
                                     className="bg-red-50 text-red-600 p-2 rounded-full hover:bg-red-600 hover:text-white transition-all opacity-0 group-hover:opacity-100"
