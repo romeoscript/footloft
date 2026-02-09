@@ -5,11 +5,15 @@ import BestSeller from '@/components/BestSeller'
 import OurPolicy from '@/components/OurPolicy'
 import NewsletterBox from '@/components/NewsletterBox'
 
-export default function Home() {
+import { getCategories } from "@/lib/data";
+
+export default async function Home() {
+  const categories = await getCategories();
+
   return (
     <div>
       <Hero />
-      <CategorySection />
+      <CategorySection categories={categories} />
       <LatestCollection />
       <BestSeller />
       <OurPolicy />

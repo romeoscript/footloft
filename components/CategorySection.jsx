@@ -5,24 +5,8 @@ import { ShopContext } from "../context/ShopContext";
 import Image from "next/image";
 import Link from "next/link";
 
-const CategorySection = () => {
+const CategorySection = ({ categories }) => {
   const { products } = useContext(ShopContext);
-  const [categories, setCategories] = React.useState([]);
-
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/categories");
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          setCategories(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch categories", error);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   // Calculate product counts
   const getProductCount = (name) => {
