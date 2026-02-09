@@ -5,7 +5,6 @@ import prisma from "@/lib/prisma";
 import { containsProfanity } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { nanoid } from "nanoid";
 
 export async function publishPost(formData: FormData) {
   const session = await auth();
@@ -101,9 +100,22 @@ export async function saveDraft(formData: FormData) {
   redirect(`/posts/${post.id}`);
 }
 
+interface Address {
+  firstName: string;
+  lastName: string;
+  email: string;
+  street: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+  phone: string;
+  [key: string]: string | number | boolean | null | undefined; // To satisfy Prisma's Json type without using 'any'
+}
+
 export async function placeOrder(orderData: {
   amount: number;
-  address: any;
+  address: Address;
   items: Array<{
     productId: string;
     quantity: number;
