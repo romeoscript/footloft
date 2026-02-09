@@ -4,26 +4,44 @@ import Image from 'next/image';
 import { ShopContext } from '@/context/ShopContext'
 import Title from '@/components/Title';
 
-interface Product {
-    _id: string;
-    name: string;
+interface OrderItem {
+    id: string;
+    productId: string;
+    product: {
+        name: string;
+        images: string[];
+    };
     price: number;
-    image: string[];
+    quantity: number;
+    size: string;
+    status: string;
+    payment: string;
+    paymentStatus: boolean;
+    date: string;
+}
+
+interface Order {
+    id: string;
+    status: string;
+    paymentMethod: string;
+    paymentStatus: boolean;
+    createdAt: string;
+    items: OrderItem[];
 }
 
 const Orders = () => {
 
     const { currency } = useContext(ShopContext);
-    const [orderData, setOrderData] = useState([]);
+    const [orderData, setOrderData] = useState<OrderItem[]>([]);
 
     const loadOrderData = async () => {
         try {
             const response = await fetch('/api/orders');
             const data = await response.json();
             if (data && !data.error) {
-                let allOrdersItem = [];
-                data.map((order) => {
-                    order.items.map((item) => {
+                const allOrdersItem: OrderItem[] = [];
+                data.map((order: Order) => {
+                    order.items.map((item: OrderItem) => {
                         item['status'] = order.status;
                         item['payment'] = order.paymentMethod;
                         item['paymentStatus'] = order.paymentStatus;
@@ -53,7 +71,9 @@ const Orders = () => {
                 {orderData.map((item, index) => (
                     <div key={index} className='py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
                         <div className='flex items-start gap-6 text-sm '>
-                            <Image className='w-16 sm:w-20' src={item.product?.images?.[0]} alt={item.product?.name} width={80} height={100} />
+                            {item.product?.images?.[0] && (
+                                <Image className='w-16 sm:w-20' src={item.product.images[0]} alt={item.product?.name} width={80} height={100} />
+                            )}
                             <div>
                                 <p className='sm:text-base font-medium'>{item.product?.name}</p>
                                 <div className='flex items-center gap-3 mt-2 text-base text-gray-700'>
