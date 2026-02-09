@@ -4,6 +4,11 @@ import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+interface CategoryItem {
+    id: string;
+    name: string;
+}
+
 const AddProduct = () => {
     const [image1, setImage1] = useState<File | null>(null);
     const [image2, setImage2] = useState<File | null>(null);
@@ -13,12 +18,35 @@ const AddProduct = () => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [category, setCategory] = useState("Men");
-    const [subCategory, setSubCategory] = useState("Topwear");
+    const [category, setCategory] = useState("");
+    const [subCategory, setSubCategory] = useState("");
     const [bestseller, setBestseller] = useState(false);
     const [sizes, setSizes] = useState<string[]>([]);
 
     const [loading, setLoading] = useState(false);
+    const [categories, setCategories] = useState<CategoryItem[]>([]);
+    const [subCategories, setSubCategories] = useState<CategoryItem[]>([]);
+
+    const fetchCategories = async () => {
+        try {
+            const [catRes, subRes] = await Promise.all([
+                axios.get("/api/admin/categories"),
+                axios.get("/api/admin/subcategories"),
+            ]);
+            setCategories(catRes.data);
+            setSubCategories(subRes.data);
+
+            if (catRes.data.length > 0) setCategory(catRes.data[0].name);
+            if (subRes.data.length > 0) setSubCategory(subRes.data[0].name);
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to load categories");
+        }
+    };
+
+    React.useEffect(() => {
+        fetchCategories();
+    }, []);
 
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -176,25 +204,26 @@ const AddProduct = () => {
                 <div>
                     <p className="mb-2 font-medium text-gray-700">Category</p>
                     <select
+                        value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-black"
                     >
-                        <option value="Men">Men</option>
-                        <option value="Women">Women</option>
-                        <option value="Kids">Kids</option>
+                        {categories.map((cat) => (
+                            <option key={cat.id} value={cat.name}>{cat.name}</option>
+                        ))}
                     </select>
                 </div>
 
                 <div>
                     <p className="mb-2 font-medium text-gray-700">Sub Category</p>
                     <select
+                        value={subCategory}
                         onChange={(e) => setSubCategory(e.target.value)}
                         className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-black"
                     >
-                        <option value="Topwear">Topwear</option>
-                        <option value="Bottomwear">Bottomwear</option>
-                        <option value="Winterwear">Winterwear</option>
-                        <option value="Footwear">Footwear</option>
+                        {subCategories.map((sub) => (
+                            <option key={sub.id} value={sub.name}>{sub.name}</option>
+                        ))}
                     </select>
                 </div>
 
