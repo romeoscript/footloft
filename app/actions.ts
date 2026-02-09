@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, signIn } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/prisma";
 import { containsProfanity } from "@/lib/utils";
 import { sendOrderReceipt } from "@/lib/email";
@@ -8,6 +8,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { AuthError } from "next-auth";
+
+export async function signOutUser() {
+  await signOut({ redirectTo: "/" });
+}
 
 export async function signInWithCredentials(email: string, password: string) {
   const trimmed = email.trim().toLowerCase();

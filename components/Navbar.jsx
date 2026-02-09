@@ -5,6 +5,7 @@ import { assets } from "../assets/assets";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ShopContext } from "../context/ShopContext";
+import { signOutUser } from "@/app/actions";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -20,13 +21,8 @@ const Navbar = () => {
   }, [pathname]);
 
   const handleSignOut = async () => {
-    try {
-      await fetch("/api/auth/signout", { method: "POST" });
-      setUser(null);
-      window.location.href = "/";
-    } catch (e) {
-      window.location.href = "/";
-    }
+    await signOutUser();
+    setUser(null);
   };
 
   return (
