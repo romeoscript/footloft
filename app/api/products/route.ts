@@ -57,3 +57,58 @@ export async function GET(request: Request) {
     );
   }
 }
+export async function POST(request: Request) {
+  try {
+    const data = await request.json();
+    const {
+      name,
+      description,
+      price,
+      images,
+      category,
+      subCategory,
+      sizes,
+      bestseller,
+    } = data;
+
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category ||
+      !subCategory ||
+      !images ||
+      images.length === 0
+    ) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
+    }
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        description,
+        price: parseFloat(price),
+        images,
+        category,
+        subCategory,
+        sizes: sizes || [],
+        bestseller: !!bestseller,
+        date: BigInt(Date.now()),
+      },
+    });
+
+    return NextResponse.json(
+      { success: true, productId: product.id },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}

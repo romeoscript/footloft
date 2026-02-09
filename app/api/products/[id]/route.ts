@@ -31,3 +31,23 @@ export async function GET(
     );
   }
 }
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
+  try {
+    await prisma.product.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return NextResponse.json({ success: true, message: "Product deleted" });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
