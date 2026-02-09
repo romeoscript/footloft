@@ -31,7 +31,9 @@ interface Order {
     items: OrderItem[];
 }
 
-const Orders = () => {
+import { Suspense } from 'react';
+
+const OrdersContent = () => {
     const searchParams = useSearchParams();
     const receiptSent = searchParams.get('receipt') === 'sent';
     const { currency } = useContext(ShopContext);
@@ -122,6 +124,14 @@ const Orders = () => {
 
 
         </div>
+    )
+}
+
+const Orders = () => {
+    return (
+        <Suspense fallback={<div className='min-h-[60vh] flex items-center justify-center'>Loading...</div>}>
+            <OrdersContent />
+        </Suspense>
     )
 }
 

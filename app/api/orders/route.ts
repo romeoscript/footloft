@@ -27,7 +27,18 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(orders);
+    const formattedOrders = orders.map((order) => ({
+      ...order,
+      items: order.items.map((item) => ({
+        ...item,
+        product: {
+          ...item.product,
+          date: Number(item.product.date),
+        },
+      })),
+    }));
+
+    return NextResponse.json(formattedOrders);
   } catch (error) {
     console.error("Error fetching orders:", error);
     return NextResponse.json(

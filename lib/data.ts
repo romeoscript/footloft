@@ -11,6 +11,7 @@ export const getProducts = unstable_cache(
       ...item,
       _id: item.id,
       image: item.images,
+      date: Number(item.date),
     }));
   },
   ["products-list"],
@@ -34,7 +35,14 @@ export const getSubCategories = unstable_cache(
 );
 
 export const getProductById = cache(async (id: string) => {
-  return await prisma.product.findUnique({
+  const product = await prisma.product.findUnique({
     where: { id },
   });
+  if (product) {
+    return {
+      ...product,
+      date: Number(product.date),
+    };
+  }
+  return null;
 });

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   if (!PAYSTACK_SECRET) {
     return NextResponse.json(
       { error: "Paystack is not configured. Set PAYSTACK_SECRET_KEY." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -36,13 +36,18 @@ export async function POST(request: Request) {
       amount: number;
       email: string;
       address: Address;
-      items: Array<{ productId: string; quantity: number; size: string; price: number }>;
+      items: Array<{
+        productId: string;
+        quantity: number;
+        size: string;
+        price: number;
+      }>;
     } = body;
 
     if (!amount || amount <= 0 || !email || !address || !items?.length) {
       return NextResponse.json(
         { error: "Missing amount, email, address, or items" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -53,7 +58,8 @@ export async function POST(request: Request) {
       data: {
         userId,
         amount: Number(amount),
-        address,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        address: address as any,
         paymentMethod: "Paystack",
         paymentStatus: false,
         status: "Pending",
@@ -71,8 +77,13 @@ export async function POST(request: Request) {
     const amountInKobo = Math.round(Number(amount) * 100);
     const reference = `ft_${order.id}_${Date.now()}`;
 
-    const origin = request.headers.get("origin") || request.headers.get("referer")?.replace(/\/$/, "") || "";
-    const callbackUrl = origin ? `${origin}/place-order/verify` : `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/place-order/verify`;
+    const origin =
+      request.headers.get("origin") ||
+      request.headers.get("referer")?.replace(/\/$/, "") ||
+      "";
+    const callbackUrl = origin
+      ? `${origin}/place-order/verify`
+      : `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/place-order/verify`;
 
     const res = await fetch(PAYSTACK_URL, {
       method: "POST",
@@ -98,7 +109,7 @@ export async function POST(request: Request) {
       await prisma.order.delete({ where: { id: order.id } }).catch(() => {});
       return NextResponse.json(
         { error: data.message || "Failed to initialize payment" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -111,7 +122,7 @@ export async function POST(request: Request) {
     console.error("Paystack initialize error:", error);
     return NextResponse.json(
       { error: "Failed to initialize payment" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -64,7 +64,7 @@ import category_women from './category_women.png'
 import category_footwear from './category_footwear.png'
 
 
-import logo from './logo.png'
+import logo from './logo2.png'
 import hero_img from './hero_img.png'
 import cart_icon from './cart_icon.png'
 import bin_icon from './bin_icon.png'

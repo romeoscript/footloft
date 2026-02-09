@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-export default function VerifyPaymentPage() {
+import { Suspense } from "react";
+
+function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<"verifying" | "success" | "error">("verifying");
@@ -66,5 +68,13 @@ export default function VerifyPaymentPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function VerifyPaymentPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center">Loading...</div>}>
+      <VerifyContent />
+    </Suspense>
   );
 }
