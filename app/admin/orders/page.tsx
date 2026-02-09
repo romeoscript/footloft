@@ -5,8 +5,36 @@ import { toast } from "react-toastify";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 
+interface OrderItem {
+    product: {
+        name: string;
+    };
+    quantity: number;
+    size: string;
+}
+
+interface Order {
+    id: string;
+    items: OrderItem[];
+    address: {
+        firstName: string;
+        lastName: string;
+        street: string;
+        city: string;
+        state: string;
+        country: string;
+        zipcode: string;
+        phone: string;
+    };
+    paymentMethod: string;
+    paymentStatus: boolean;
+    createdAt: string | Date;
+    amount: number;
+    status: string;
+}
+
 const AdminOrders = () => {
-    const [orders, setOrders] = useState<any[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(false);
 
     const fetchOrders = async () => {
@@ -54,7 +82,7 @@ const AdminOrders = () => {
                 ) : orders.length === 0 ? (
                     <div className="text-center py-10 text-gray-500">No orders found.</div>
                 ) : (
-                    orders.map((order, index) => (
+                    orders.map((order) => (
                         <div
                             key={order.id}
                             className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start p-5 border border-slate-200 rounded-md text-sm text-gray-700 hover:bg-slate-50 transition-all shadow-sm"
@@ -65,7 +93,7 @@ const AdminOrders = () => {
 
                             <div>
                                 <div className="font-bold text-black mb-2">
-                                    {order.items.map((item: any, idx: number) => (
+                                    {order.items.map((item: OrderItem, idx: number) => (
                                         <p key={idx}>
                                             {item.product.name} x {item.quantity} <span>({item.size})</span>
                                             {idx !== order.items.length - 1 && ","}

@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import SearchBar from "@/components/SearchBar";
-import ScrollToTop from "@/components/ScrollToTop";
 import ShopContextProvider from "@/context/ShopContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,14 +31,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ShopContextProvider>
-          <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-            <ToastContainer />
-            <Navbar />
-            <SearchBar />
-            <ScrollToTop />
-            {children}
-            <Footer />
-          </div>
+          <ToastContainer />
+          {children}
         </ShopContextProvider>
       </body>
     </html>

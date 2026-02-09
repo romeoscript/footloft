@@ -1,9 +1,8 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { assets } from "@/assets/assets";
-import Image from "next/image";
 
 const AddProduct = () => {
     const [image1, setImage1] = useState<File | null>(null);
@@ -67,9 +66,13 @@ const AddProduct = () => {
                 setBestseller(false);
                 setSizes([]);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            toast.error(error.response?.data?.error || "Failed to add product");
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.error || "Failed to add product");
+            } else {
+                toast.error("An unexpected error occurred");
+            }
         } finally {
             setLoading(false);
         }
@@ -83,8 +86,8 @@ const AddProduct = () => {
     };
 
     const toggleSize = (size: string) => {
-        setSizes((prev) =>
-            prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
+        setSizes((prev: string[]) =>
+            prev.includes(size) ? prev.filter((s: string) => s !== size) : [...prev, size],
         );
     };
 
@@ -101,14 +104,16 @@ const AddProduct = () => {
                         { img: image2, setImg: setImage2, id: "image2" },
                         { img: image3, setImg: setImage3, id: "image3" },
                         { img: image4, setImg: setImage4, id: "image4" },
-                    ].map((item, index) => (
+                    ].map((item) => (
                         <label key={item.id} htmlFor={item.id} className="cursor-pointer">
                             <div className="w-20 h-20 border-2 border-dashed border-gray-300 flex items-center justify-center rounded-md overflow-hidden hover:border-black transition-all">
                                 {item.img ? (
-                                    <img
+                                    <Image
                                         className="w-full h-full object-cover"
                                         src={URL.createObjectURL(item.img)}
                                         alt=""
+                                        width={80}
+                                        height={80}
                                     />
                                 ) : (
                                     <div className="flex flex-col items-center gap-1 opacity-30">
@@ -215,8 +220,8 @@ const AddProduct = () => {
                                 key={size}
                                 onClick={() => toggleSize(size)}
                                 className={`flex items-center justify-center w-10 h-10 cursor-pointer border rounded-md transition-all ${sizes.includes(size)
-                                        ? "bg-black text-white border-black"
-                                        : "bg-slate-50 border-slate-200 text-gray-600 hover:border-gray-400"
+                                    ? "bg-black text-white border-black"
+                                    : "bg-slate-50 border-slate-200 text-gray-600 hover:border-gray-400"
                                     }`}
                             >
                                 <p className="text-xs font-bold">{size}</p>
@@ -228,7 +233,7 @@ const AddProduct = () => {
 
             <div className="flex gap-2 mt-2 items-center cursor-pointer">
                 <input
-                    onChange={() => setBestseller((prev) => !prev)}
+                    onChange={() => setBestseller((prev: boolean) => !prev)}
                     checked={bestseller}
                     type="checkbox"
                     id="bestseller"

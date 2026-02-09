@@ -2,9 +2,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Image from "next/image";
+
+interface Product {
+    id: string;
+    name: string;
+    category: string;
+    price: number;
+    images: string[];
+}
 
 const ListProducts = () => {
-    const [list, setList] = useState<any[]>([]);
+    const [list, setList] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false);
 
     const fetchList = async () => {
@@ -61,15 +70,17 @@ const ListProducts = () => {
                 ) : list.length === 0 ? (
                     <div className="text-center py-10 text-gray-500">No products found.</div>
                 ) : (
-                    list.map((item, index) => (
+                    list.map((item) => (
                         <div
                             key={item.id}
                             className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-3 px-4 border rounded-md hover:bg-slate-50 transition-all text-sm group"
                         >
-                            <img
+                            <Image
                                 className="w-12 h-12 object-cover rounded shadow-sm"
                                 src={item.images[0]}
                                 alt=""
+                                width={48}
+                                height={48}
                             />
                             <p className="font-medium text-gray-800 truncate">{item.name}</p>
                             <p className="hidden md:block text-gray-600">{item.category}</p>
