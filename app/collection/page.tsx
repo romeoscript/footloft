@@ -9,9 +9,9 @@ const Collection = () => {
 
     const { products, search, showSearch } = useContext(ShopContext);
 
-    const [filterProducts, setFilterProducts] = useState([]);
-    const [category, setCategory] = useState([]);
-    const [subCategory, setSubCategory] = useState([]);
+    const [filterProducts, setFilterProducts] = useState<any[]>([]);
+    const [category, setCategory] = useState<string[]>([]);
+    const [subCategory, setSubCategory] = useState<string[]>([]);
     const [showFilter, setShowFilter] = useState(false);
     const [sortType, setSortType] = useState('relavent')
 
