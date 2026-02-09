@@ -128,7 +128,7 @@ const AdminOrders = () => {
                             </div>
 
                             <p className="text-lg font-bold text-black sm:text-center self-center">
-                                ${order.amount.toFixed(2)}
+                                ₦{order.amount.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
                             </p>
 
                             <select

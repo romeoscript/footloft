@@ -7,8 +7,8 @@ import { toast } from "react-toastify";
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
-  const currency = "$";
-  const delivery_fee = 10;
+  const currency = "₦";
+  const delivery_fee = 500; // Naira
   const router = useRouter();
   const navigate = (path) => router.push(path);
   const [search, setSearch] = useState("");

@@ -3,7 +3,7 @@ import React from "react";
 
 const AdminDashboard = () => {
     const stats = [
-        { label: "Total Revenue", value: "$12,450.00", change: "+12.5%" },
+        { label: "Total Revenue", value: "₦12,450.00", change: "+12.5%" },
         { label: "Total Orders", value: "156", change: "+8%" },
         { label: "Total Products", value: "48", change: "Hold" },
         { label: "Active Users", value: "1,204", change: "+15%" },

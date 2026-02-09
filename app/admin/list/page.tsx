@@ -86,7 +86,7 @@ const ListProducts = () => {
                             <p className="font-medium text-gray-800 truncate">{item.name}</p>
                             <p className="hidden md:block text-gray-600">{item.category}</p>
                             <p className="hidden md:block font-bold">
-                                ${item.price.toFixed(2)}
+                                ₦{item.price.toLocaleString("en-NG", { minimumFractionDigits: 2 })}
                             </p>
                             <div className="flex justify-center gap-2">
                                 <Link
