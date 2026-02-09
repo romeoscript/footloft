@@ -27,15 +27,17 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name } = await request.json();
+    const body = await request.json();
+    const { name, image } = body as { name?: string; image?: string | null };
 
-    if (!name) {
+    if (!name || typeof name !== "string" || !name.trim()) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     const category = await prisma.category.create({
       data: {
-        name,
+        name: name.trim(),
+        image: image && typeof image === "string" ? image : undefined,
       },
     });
 

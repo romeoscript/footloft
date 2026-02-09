@@ -103,8 +103,9 @@ model OrderItem {
 }
 
 model Category {
-  id   String @id @default(cuid())
-  name String @unique
+  id    String  @id @default(cuid())
+  name  String  @unique
+  image String?
 }
 
 model SubCategory {
