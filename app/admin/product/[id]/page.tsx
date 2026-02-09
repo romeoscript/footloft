@@ -44,7 +44,7 @@ const EditProduct = ({ params }: { params: Promise<{ id: string }> }) => {
     const [categories, setCategories] = useState<CategoryItem[]>([]);
     const [subCategories, setSubCategories] = useState<CategoryItem[]>([]);
 
-    const fetchData = async () => {
+    const fetchData = React.useCallback(async () => {
         try {
             const [catRes, subRes, productRes] = await Promise.all([
                 axios.get("/api/admin/categories"),
@@ -75,11 +75,11 @@ const EditProduct = ({ params }: { params: Promise<{ id: string }> }) => {
         } finally {
             setFetching(false);
         }
-    };
+    }, [id, router]);
 
     useEffect(() => {
         fetchData();
-    }, [id]);
+    }, [fetchData]);
 
     const onSubmitHandler = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -295,8 +295,8 @@ const EditProduct = ({ params }: { params: Promise<{ id: string }> }) => {
                             key={size}
                             onClick={() => toggleSize(size)}
                             className={`flex items-center justify-center w-10 h-10 cursor-pointer border rounded-md transition-all ${sizes.includes(size)
-                                    ? "bg-black text-white border-black"
-                                    : "bg-slate-50 border-slate-200 text-gray-600 hover:border-gray-400"
+                                ? "bg-black text-white border-black"
+                                : "bg-slate-50 border-slate-200 text-gray-600 hover:border-gray-400"
                                 }`}
                         >
                             <p className="text-xs font-bold">{size}</p>

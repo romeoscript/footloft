@@ -3,10 +3,16 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    if (typeof (prisma as { category?: { findMany: unknown } }).category?.findMany !== "function") {
+    if (
+      typeof (prisma as { category?: { findMany: unknown } }).category
+        ?.findMany !== "function"
+    ) {
       return NextResponse.json(
-        { error: "Prisma client missing Category. Run: npx prisma generate, then restart the dev server." },
-        { status: 503 }
+        {
+          error:
+            "Prisma client missing Category. Run: npx prisma generate, then restart the dev server.",
+        },
+        { status: 503 },
       );
     }
     const categories = await prisma.category.findMany({
@@ -42,9 +48,9 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, category });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating category:", error);
-    if (error.code === "P2002") {
+    if ((error as { code?: string }).code === "P2002") {
       return NextResponse.json(
         { error: "Category already exists" },
         { status: 400 },

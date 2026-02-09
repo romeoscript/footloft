@@ -3,10 +3,16 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    if (typeof (prisma as { subCategory?: { findMany: unknown } }).subCategory?.findMany !== "function") {
+    if (
+      typeof (prisma as { subCategory?: { findMany: unknown } }).subCategory
+        ?.findMany !== "function"
+    ) {
       return NextResponse.json(
-        { error: "Prisma client missing SubCategory. Run: npx prisma generate, then restart the dev server." },
-        { status: 503 }
+        {
+          error:
+            "Prisma client missing SubCategory. Run: npx prisma generate, then restart the dev server.",
+        },
+        { status: 503 },
       );
     }
     const subCategories = await prisma.subCategory.findMany({
@@ -40,9 +46,9 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, subCategory });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating sub-category:", error);
-    if (error.code === "P2002") {
+    if ((error as { code?: string }).code === "P2002") {
       return NextResponse.json(
         { error: "Sub-category already exists" },
         { status: 400 },
