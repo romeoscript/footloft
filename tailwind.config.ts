@@ -12,6 +12,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        outfit: ['"Outfit"', "sans-serif"],
+        prata: ['"Prata"', "serif"],
+      },
     },
   },
   plugins: [],

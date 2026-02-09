@@ -13,7 +13,7 @@ const Navbar = () => {
   const { setShowSearch, navigate, getCartCount } = useContext(ShopContext);
 
   return (
-    <div className="flex items-center justify-between py-5 font-medium">
+    <div className="flex items-center justify-between py-5 font-medium sticky top-0 z-50 bg-white/80 backdrop-blur-md transition-all">
       <Link href="/">
         <Image
           className="w-36"
@@ -21,38 +21,15 @@ const Navbar = () => {
           alt="Logo"
           width={144}
           height={40}
+          priority
         />
       </Link>
 
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
-        <Link
-          href="/"
-          className={`flex flex-col items-center gap-1 ${pathname === "/" ? "active" : ""}`}
-        >
-          <p>HOME</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </Link>
-        <Link
-          href="/collection"
-          className={`flex flex-col items-center gap-1 ${pathname === "/collection" ? "active" : ""}`}
-        >
-          <p>COLLECTION</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </Link>
-        <Link
-          href="/about"
-          className={`flex flex-col items-center gap-1 ${pathname === "/about" ? "active" : ""}`}
-        >
-          <p>ABOUT</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </Link>
-        <Link
-          href="/contact"
-          className={`flex flex-col items-center gap-1 ${pathname === "/contact" ? "active" : ""}`}
-        >
-          <p>CONTACT</p>
-          <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
-        </Link>
+        <NavLink href="/" label="HOME" pathname={pathname} />
+        <NavLink href="/collection" label="COLLECTION" pathname={pathname} />
+        <NavLink href="/about" label="ABOUT" pathname={pathname} />
+        <NavLink href="/contact" label="CONTACT" pathname={pathname} />
       </ul>
 
       <div className="flex items-center gap-6">
@@ -172,3 +149,18 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+const NavLink = ({ href, label, pathname }) => (
+  <Link href={href} className="flex flex-col items-center gap-1 group">
+    <p className="tracking-widest text-[#1a1a1a] font-medium text-xs hover:text-black transition-colors">
+      {label}
+    </p>
+    <hr
+      className={`w-2/4 border-none h-[1.5px] bg-[#1a1a1a] transition-all duration-300 ${
+        pathname === href
+          ? "w-2/4 opacity-100"
+          : "w-0 opacity-0 group-hover:w-2/4 group-hover:opacity-50"
+      }`}
+    />
+  </Link>
+);

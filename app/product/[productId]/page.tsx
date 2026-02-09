@@ -43,7 +43,7 @@ const Product = () => {
     }, [fetchProductData])
 
     return productData ? (
-        <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
+        <div className='border-t-2 pt-10 animate-fade-in'>
 
             <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>  {/* -------- Product Row ---------- */}
 
