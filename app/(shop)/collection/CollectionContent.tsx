@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState, useCallback, Suspense } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import Image from 'next/image';
 import Title from '@/components/Title'
 import ProductItem from '@/components/ProductItem'
@@ -34,8 +34,10 @@ const CollectionContent = ({ initialCategories, initialSubCategories }: Collecti
     const [filterProducts, setFilterProducts] = useState<Product[]>([]);
     const [category, setCategory] = useState<string[]>([]);
     const [subCategory, setSubCategory] = useState<string[]>([]);
-    const [categoryList, setCategoryList] = useState<CategoryItem[]>(initialCategories);
-    const [subCategoryList, setSubCategoryList] = useState<CategoryItem[]>(initialSubCategories);
+
+    // Use initial props directly, or memoize if needed. Since they are passed from server component and unlikely to change on client unless re-fetched (which we don't do), using props is safer.
+    const categoryList = initialCategories;
+    const subCategoryList = initialSubCategories;
 
     useEffect(() => {
         const cat = searchParams.get('category');
