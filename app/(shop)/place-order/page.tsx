@@ -94,8 +94,8 @@ const PlaceOrder = () => {
             };
             const result = await placeOrder(orderData);
             if (result.success) {
-                toast.success("Order placed successfully!");
-                navigate('/orders');
+                toast.success("Order placed successfully! Check your email for the receipt.");
+                navigate('/orders?receipt=sent');
             } else {
                 toast.error(result.error || "Failed to place order");
             }

@@ -1,6 +1,8 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { ShopContext } from '@/context/ShopContext'
 import Title from '@/components/Title';
 
@@ -30,14 +32,21 @@ interface Order {
 }
 
 const Orders = () => {
-
+    const searchParams = useSearchParams();
+    const receiptSent = searchParams.get('receipt') === 'sent';
     const { currency } = useContext(ShopContext);
     const [orderData, setOrderData] = useState<OrderItem[]>([]);
+    const [unauthorized, setUnauthorized] = useState(false);
 
     const loadOrderData = async () => {
+        setUnauthorized(false);
         try {
             const response = await fetch('/api/orders');
             const data = await response.json();
+            if (response.status === 401) {
+                setUnauthorized(true);
+                return;
+            }
             if (data && !data.error) {
                 const allOrdersItem: OrderItem[] = [];
                 data.map((order: Order) => {
@@ -66,6 +75,20 @@ const Orders = () => {
             <div className='text-2xl'>
                 <Title text1={'MY'} text2={'ORDERS'} />
             </div>
+
+            {receiptSent && (
+                <div className='mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm'>
+                    Your receipt has been sent to your email.
+                </div>
+            )}
+
+            {unauthorized && (
+                <div className='mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg text-slate-700'>
+                    <p className='font-medium'>Sign in to see your orders here.</p>
+                    <p className='mt-1 text-sm text-slate-600'>You can still shop as a guest; we’ll send your receipt to your email.</p>
+                    <Link href='/login' className='inline-block mt-3 text-sm font-medium text-black underline'>Sign in</Link>
+                </div>
+            )}
 
             <div>
                 {orderData.map((item, index) => (

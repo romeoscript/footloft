@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendOrderReceipt } from "@/lib/email";
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
@@ -51,6 +52,10 @@ export async function GET(request: Request) {
         status: "Order Placed",
       },
     });
+
+    sendOrderReceipt(orderId).catch((err) =>
+      console.error("Receipt email failed:", err)
+    );
 
     return NextResponse.json({ success: true, orderId });
   } catch (error) {

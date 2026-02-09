@@ -24,7 +24,7 @@ export default function VerifyPaymentPage() {
         if (data.success) {
           setStatus("success");
           setMessage("Payment successful! Redirecting to your orders...");
-          setTimeout(() => router.replace("/orders"), 2000);
+          setTimeout(() => router.replace("/orders?receipt=sent"), 2000);
         } else {
           setStatus("error");
           setMessage(data.error || "Payment verification failed.");

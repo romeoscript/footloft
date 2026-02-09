@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Image from "next/image";
 import { assets } from "../assets/assets";
 import Link from "next/link";
@@ -8,9 +8,26 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const [user, setUser] = useState(null);
   const pathname = usePathname();
-
   const { setShowSearch, navigate, getCartCount } = useContext(ShopContext);
+
+  useEffect(() => {
+    fetch("/api/session")
+      .then((res) => res.json())
+      .then((data) => setUser(data?.user ?? null))
+      .catch(() => setUser(null));
+  }, [pathname]);
+
+  const handleSignOut = async () => {
+    try {
+      await fetch("/api/auth/signout", { method: "POST" });
+      setUser(null);
+      window.location.href = "/";
+    } catch (e) {
+      window.location.href = "/";
+    }
+  };
 
   return (
     <>
@@ -48,6 +65,7 @@ const Navbar = () => {
           <div className="group relative">
             <Image
               onClick={() => {
+                if (user) return;
                 navigate("/login");
               }}
               className="w-5 cursor-pointer"
@@ -57,29 +75,31 @@ const Navbar = () => {
               height={20}
             />
 
-            {/* Dropdown Menu */}
-            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-              <div className="flex flex-col gap-2 w-36 py-3 px-5  bg-slate-100 text-gray-500 rounded">
-                <p
-                  onClick={() => {}}
-                  className="cursor-pointer hover:text-black"
-                >
-                  My Profile
-                </p>
-                <p
-                  onClick={() => navigate("/orders")}
-                  className="cursor-pointer hover:text-black"
-                >
-                  Orders
-                </p>
-                <p
-                  onClick={() => {}}
-                  className="cursor-pointer hover:text-black"
-                >
-                  Logout
-                </p>
+            {/* Dropdown: only when logged in */}
+            {user && (
+              <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+                <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+                  <p
+                    onClick={() => navigate("/")}
+                    className="cursor-pointer hover:text-black"
+                  >
+                    My Profile
+                  </p>
+                  <p
+                    onClick={() => navigate("/orders")}
+                    className="cursor-pointer hover:text-black"
+                  >
+                    Orders
+                  </p>
+                  <p
+                    onClick={handleSignOut}
+                    className="cursor-pointer hover:text-black"
+                  >
+                    Logout
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <Link href="/cart" className="relative">
             <Image

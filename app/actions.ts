@@ -1,10 +1,24 @@
 "use server";
 
-import { auth } from "@/auth";
+import { auth, signIn } from "@/auth";
 import prisma from "@/lib/prisma";
 import { containsProfanity } from "@/lib/utils";
+import { sendOrderReceipt } from "@/lib/email";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
+export async function signInWithCredentials(email: string, password: string) {
+  const trimmed = email.trim().toLowerCase();
+  if (!trimmed || !password) return { error: "Email and password required" };
+  const result = await signIn("credentials", {
+    email: trimmed,
+    password,
+    redirect: false,
+  });
+  if (result?.error) return { error: "Invalid email or password" };
+  if (result?.ok) return { success: true };
+  return { error: "Sign in failed" };
+}
 
 export async function publishPost(formData: FormData) {
   const session = await auth();
@@ -144,6 +158,10 @@ export async function placeOrder(orderData: {
         },
       },
     });
+
+    sendOrderReceipt(order.id).catch((err) =>
+      console.error("Receipt email failed:", err)
+    );
 
     revalidatePath("/orders");
     return { success: true, orderId: order.id };
