@@ -5,9 +5,15 @@ import { toast } from "react-toastify";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 
+function getOrderImage(order: Order): React.ComponentProps<typeof Image>["src"] {
+    const first = order.items[0]?.product?.images?.[0];
+    return first || assets.cart_icon;
+}
+
 interface OrderItem {
     product: {
         name: string;
+        images?: string[];
     };
     quantity: number;
     size: string;
@@ -88,7 +94,13 @@ const AdminOrders = () => {
                             className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-3 items-start p-5 border border-slate-200 rounded-md text-sm text-gray-700 hover:bg-slate-50 transition-all shadow-sm"
                         >
                             <div className="flex justify-center sm:justify-start">
-                                <Image className="w-12 h-12" src={assets.cart_icon} alt="" />
+                                <Image
+                                    className="w-12 h-12 object-cover rounded"
+                                    src={getOrderImage(order)}
+                                    alt=""
+                                    width={48}
+                                    height={48}
+                                />
                             </div>
 
                             <div>
