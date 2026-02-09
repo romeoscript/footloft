@@ -53,6 +53,12 @@ import p_img49 from './p_img49.png'
 import p_img50 from './p_img50.png'
 import p_img51 from './p_img51.png'
 import p_img52 from './p_img52.png'
+import shoe_img1 from './luxury_mens_oxford_1770636997708.png'
+import shoe_img2 from './luxury_womens_stiletto_1770637011275.png'
+import shoe_img3 from './luxury_white_sneaker_1770637025828.png'
+import hero_shoe_1 from './hero_shoe_1.png'
+import hero_shoe_2 from './hero_shoe_2.png'
+import hero_shoe_3 from './hero_shoe_3.png'
 
 
 import logo from './logo.png'
@@ -92,8 +98,32 @@ export const assets = {
     contact_img,
     razorpay_logo,
     stripe_logo,
-    cross_icon
+    cross_icon,
+    hero_shoe_1,
+    hero_shoe_2,
+    hero_shoe_3
 }
+
+export const hero_slides = [
+    {
+        image: hero_shoe_1,
+        title: "Fine Footwear",
+        subtitle: "CURATED COLLECTION",
+        description: "Experience the pinnacle of craftsmanship."
+    },
+    {
+        image: hero_shoe_2,
+        title: "Elegance Redefined",
+        subtitle: "WOMEN'S COLLECTION",
+        description: "Sophistication in every step."
+    },
+    {
+        image: hero_shoe_3,
+        title: "Modern Minimalist",
+        subtitle: "DESIGNER SNEAKERS",
+        description: "Clean lines, premium comfort."
+    }
+]
 
 export const products = [
     {
@@ -113,7 +143,7 @@ export const products = [
         name: "Men Round Neck Pure Cotton T-shirt",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 200,
-        image: [p_img2_1,p_img2_2,p_img2_3,p_img2_4],
+        image: [p_img2_1, p_img2_2, p_img2_3, p_img2_4],
         category: "Men",
         subCategory: "Topwear",
         sizes: ["M", "L", "XL"],
@@ -718,6 +748,41 @@ export const products = [
         sizes: ["S", "M", "L", "XL"],
         date: 1716668445448,
         bestseller: false
+    },
+    {
+        _id: "shoe1",
+        name: "Premium Leather Oxford Shoes",
+        description: "Handcrafted from Italian calfskin, these Oxford shoes offer a timeless silhouette with deep-brown polished finish, perfect for formal occasions and business excellence.",
+        price: 450,
+        image: [shoe_img1],
+        category: "Men",
+        subCategory: "Footwear",
+        sizes: ["40", "41", "42", "43", "44"],
+        date: 1716669545448,
+        bestseller: true
+    },
+    {
+        _id: "shoe2",
+        name: "Elegant Stiletto Heels",
+        description: "Sophisticated nude leather stilettos designed for ultimate poise. Features a sleek minimalist design and premium padding for all-day luxury.",
+        price: 380,
+        image: [shoe_img2],
+        category: "Women",
+        subCategory: "Footwear",
+        sizes: ["36", "37", "38", "39", "40"],
+        date: 1716670645448,
+        bestseller: true
+    },
+    {
+        _id: "shoe3",
+        name: "Minimalist White Sneakers",
+        description: "Premium white leather sneakers that combine street-style comfort with high-fashion luxury. Clean lines and subtle textures make it a versatile closet staple.",
+        price: 290,
+        image: [shoe_img3],
+        category: "Men",
+        subCategory: "Footwear",
+        sizes: ["38", "39", "40", "41", "42", "43", "44"],
+        date: 1716671745448,
+        bestseller: true
     }
-
 ]
