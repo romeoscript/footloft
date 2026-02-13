@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Forever",
-  description: "Forever - E-commerce Application",
+  title: "Footloft",
+  description: "Footloft - E-commerce Application",
 };
 
 export default function RootLayout({

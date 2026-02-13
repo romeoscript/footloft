@@ -45,10 +45,10 @@ const Footer = () => {
             <p className="text-xl font-medium mb-5 font-prata">GET IN TOUCH</p>
             <ul className="flex flex-col gap-2 text-gray-600">
               <li className="hover:text-black cursor-pointer transition-colors">
-                +1-212-456-7890
+                07080136124, 0814 359 0972
               </li>
               <li className="hover:text-black cursor-pointer transition-colors">
-                Contact@foreveryou.com
+                Contact@footloft.com
               </li>
             </ul>
           </div>
