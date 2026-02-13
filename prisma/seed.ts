@@ -177,7 +177,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: "Admin User",
-      email: "admin@footloft.com",
+      email: "admin@footloftcloset.com",
     },
   });
 

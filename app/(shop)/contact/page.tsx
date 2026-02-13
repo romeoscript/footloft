@@ -25,7 +25,7 @@ const Contact = () => {
                         No 34 Enugu Road behind millipat hotel
                     </p>
                     <p className=" text-gray-500">
-                        Tel: 07080136124, 0814 359 0972 <br /> Email: Contact@footloft.com
+                        Tel: 07080136124, 0814 359 0972 <br /> Email: Contact@footloftcloset.com
                     </p>
                     <p className=" font-semibold text-xl text-gray-600">
                         Careers at Footloft

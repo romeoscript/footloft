@@ -47,7 +47,7 @@ const Footer = () => {
                 07080136124, 0814 359 0972
               </li>
               <li className="hover:text-black cursor-pointer transition-colors">
-                Contact@footloft.com
+                Contact@footloftcloset.com
               </li>
             </ul>
           </div>
@@ -56,7 +56,7 @@ const Footer = () => {
         <div className="bg-white">
           <hr className="border-gray-200" />
           <p className="py-5 text-sm text-center text-gray-500">
-            Copyright {new Date().getFullYear()} Footloft.com - All Right
+            Copyright {new Date().getFullYear()} footloftcloset.com - All Right
             Reserved.
           </p>
         </div>

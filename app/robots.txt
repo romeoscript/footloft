@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api
 
-Sitemap: https://footloft.com/sitemap.xml
+Sitemap: https://footloftcloset.com/sitemap.xml

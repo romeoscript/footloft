@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Footloft - Premium Footwear Store",
     description:
       "Discover the latest in footwear at Footloft. Quality, comfort, and style combined.",
-    url: "https://footloft.com",
+    url: "https://footloftcloset.com",
     siteName: "Footloft",
     locale: "en_US",
     type: "website",
