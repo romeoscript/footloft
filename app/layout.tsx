@@ -38,6 +38,20 @@ export const metadata: Metadata = {
       "Discover the latest in footwear at Footloft. Quality, comfort, and style combined.",
     url: "https://footloftcloset.com",
     siteName: "Footloft",
+    images: [
+      {
+        url: "https://footloftcloset.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Footloft - Premium Footwear Store",
+      },
+      {
+        url: "https://footloft.vercel.app/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Footloft - Premium Footwear Store",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
