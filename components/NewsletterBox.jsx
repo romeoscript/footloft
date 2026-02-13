@@ -8,8 +8,8 @@ const NewsletterBox = () => {
         Subscribe now & get 20% off
       </p>
       <p className="text-gray-400 mt-3">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.
+        Stay ahead of the trends. Subscribe to get updates on new arrivals,
+        exclusive sales, and everything Footloft.
       </p>
 
       <form className="w-full sm:w-1/2 flex items-center gap-3 mx-auto my-6 border pl-3 rounded-sm overflow-hidden border-gray-300 focus-within:border-black transition-colors">

@@ -16,10 +16,9 @@ const Footer = () => {
               height={40}
             />
             <p className="w-full md:w-2/3 text-gray-600 leading-relaxed">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book.
+              Footloft is your premier destination for high-quality footwear,
+              blending comfort, style, and innovation to help you step out with
+              confidence.
             </p>
           </div>
 
@@ -57,7 +56,8 @@ const Footer = () => {
         <div className="bg-white">
           <hr className="border-gray-200" />
           <p className="py-5 text-sm text-center text-gray-500">
-            Copyright 2024@ forever.com - All Right Reserved.
+            Copyright {new Date().getFullYear()} Footloft.com - All Right
+            Reserved.
           </p>
         </div>
       </div>
