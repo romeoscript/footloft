@@ -16,8 +16,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Footloft",
-  description: "Footloft - E-commerce Application",
+  title: {
+    default: "Footloft - Premium Footwear Store",
+    template: "%s | Footloft",
+  },
+  description:
+    "Discover the latest in footwear at Footloft. Quality, comfort, and style combined in our exclusive collection of shoes for men, women, and kids.",
+  keywords: [
+    "footwear",
+    "shoes",
+    "online shopping",
+    "Footloft",
+    "sneakers",
+    "boots",
+    "sandals",
+  ],
+  authors: [{ name: "Footloft Team" }],
+  openGraph: {
+    title: "Footloft - Premium Footwear Store",
+    description:
+      "Discover the latest in footwear at Footloft. Quality, comfort, and style combined.",
+    url: "https://footloft.com",
+    siteName: "Footloft",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Footloft - Premium Footwear Store",
+    description: "Discover the latest in footwear at Footloft.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
