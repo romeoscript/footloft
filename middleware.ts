@@ -3,12 +3,14 @@ import { NextResponse } from "next/server";
 
 export default auth((req) => {
   const isAuth = !!req.auth;
-  const isTargetingAdmin = req.nextUrl.pathname.startsWith("/admin");
-  const userRole = (req.auth?.user as any)?.role;
+  const isTargetingAdmin =
+    req.nextUrl.pathname.startsWith("/admin") &&
+    req.nextUrl.pathname !== "/admin/login";
+  const userRole = req.auth?.user?.role;
 
   if (isTargetingAdmin) {
     if (!isAuth) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL("/admin/login", req.url));
     }
     if (userRole !== "ADMIN") {
       return NextResponse.redirect(new URL("/", req.url));

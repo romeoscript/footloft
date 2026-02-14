@@ -39,7 +39,13 @@ const Login = () => {
         return;
       }
       toast.success(currentState === "Login" ? "Welcome back!" : "Account created!");
-      router.push("/");
+
+      if (result.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+
       router.refresh();
     } catch (err) {
       console.error(err);

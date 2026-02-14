@@ -23,7 +23,13 @@ export async function signInWithCredentials(email: string, password: string) {
       password,
       redirect: false,
     });
-    return { success: true };
+
+    // Fetch the session to get the role
+    const session = await auth();
+    return {
+      success: true,
+      role: session?.user?.role,
+    };
   } catch (error) {
     if (error instanceof AuthError) {
       if (error.type === "CredentialsSignin") {
@@ -33,6 +39,50 @@ export async function signInWithCredentials(email: string, password: string) {
     }
     throw error;
   }
+}
+
+export async function getAdminStats() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  const [totalOrders, totalProducts, totalUsers, revenueData, recentOrders] =
+    await Promise.all([
+      prisma.order.count(),
+      prisma.product.count(),
+      prisma.user.count(),
+      prisma.order.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          paymentStatus: true,
+        },
+      }),
+      prisma.order.findMany({
+        take: 5,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+  return {
+    totalOrders,
+    totalProducts,
+    totalUsers,
+    totalRevenue: revenueData._sum.amount || 0,
+    recentOrders,
+  };
 }
 
 export async function publishPost(formData: FormData) {
