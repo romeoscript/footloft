@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
 import { assets } from "@/assets/assets";
+import { signOutUser } from "@/app/actions";
 
 const AdminHeader = () => {
     return (
@@ -16,7 +18,10 @@ const AdminHeader = () => {
                     Admin Panel
                 </p>
             </div>
-            <button className="bg-black text-white px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm">
+            <button
+                onClick={() => signOutUser()}
+                className="bg-black text-white px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm"
+            >
                 Logout
             </button>
         </div>
