@@ -3,7 +3,7 @@
 import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/prisma";
 import { containsProfanity } from "@/lib/utils";
-import { sendOrderReceipt } from "@/lib/email";
+import { sendOrderReceipt, sendAdminOrderNotification } from "@/lib/email";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -226,6 +226,10 @@ export async function placeOrder(orderData: {
 
     sendOrderReceipt(order.id).catch((err) =>
       console.error("Receipt email failed:", err),
+    );
+
+    sendAdminOrderNotification(order.id).catch((err) =>
+      console.error("Admin notification failed:", err),
     );
 
     revalidatePath("/orders");

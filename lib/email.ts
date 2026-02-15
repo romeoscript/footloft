@@ -47,7 +47,7 @@ function buildReceiptHtml(params: {
           <td style="padding:10px;border-bottom:1px solid #eee">${i.quantity}</td>
           <td style="padding:10px;border-bottom:1px solid #eee">${i.size}</td>
           <td style="padding:10px;border-bottom:1px solid #eee">₦${i.price.toLocaleString("en-NG", { minimumFractionDigits: 2 })}</td>
-        </tr>`
+        </tr>`,
     )
     .join("");
   const addressBlock = [
@@ -105,7 +105,9 @@ function buildReceiptHtml(params: {
 </html>`;
 }
 
-export async function sendOrderReceipt(orderId: string): Promise<{ ok: boolean; error?: string }> {
+export async function sendOrderReceipt(
+  orderId: string,
+): Promise<{ ok: boolean; error?: string }> {
   if (!process.env.RESEND_API_KEY) {
     console.warn("RESEND_API_KEY not set; skipping receipt email");
     return { ok: false, error: "Email not configured" };
@@ -127,7 +129,8 @@ export async function sendOrderReceipt(orderId: string): Promise<{ ok: boolean; 
     }
 
     const customerName =
-      [address.firstName, address.lastName].filter(Boolean).join(" ") || "Customer";
+      [address.firstName, address.lastName].filter(Boolean).join(" ") ||
+      "Customer";
     const html = buildReceiptHtml({
       orderId: order.id,
       customerName,
@@ -158,6 +161,135 @@ export async function sendOrderReceipt(orderId: string): Promise<{ ok: boolean; 
     return { ok: true };
   } catch (e) {
     console.error("sendOrderReceipt error:", e);
+    return { ok: false, error: String(e) };
+  }
+}
+
+const ADMIN_EMAILS = ["jacintaujunwa1@gmail.com", "uliagam184@gmail.com"];
+
+function buildAdminNotificationHtml(params: {
+  orderId: string;
+  customerName: string;
+  customerEmail: string;
+  items: Array<{ name: string; quantity: number; size: string; price: number }>;
+  amount: number;
+  paymentMethod: string;
+  address: AddressJson;
+  createdAt: Date;
+}) {
+  const {
+    orderId,
+    customerName,
+    customerEmail,
+    items,
+    amount,
+    paymentMethod,
+    address,
+    createdAt,
+  } = params;
+  const dateStr = new Date(createdAt).toLocaleString("en-NG", {
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+
+  const rows = items
+    .map(
+      (i) => `
+    <tr>
+      <td style="padding:8px; border-bottom:1px solid #eee">${i.name} (${i.size})</td>
+      <td style="padding:8px; border-bottom:1px solid #eee">${i.quantity}</td>
+      <td style="padding:8px; border-bottom:1px solid #eee; text-align:right">₦${i.price.toLocaleString()}</td>
+    </tr>
+  `,
+    )
+    .join("");
+
+  return `
+    <div style="font-family:sans-serif; max-width:600px; margin:0 auto; border:1px solid #eee; padding:20px; color:#333">
+      <h2 style="color:#111; border-bottom:2px solid #111; padding-bottom:10px">New Order Received!</h2>
+      <p style="font-size:16px">A new order <strong>#${orderId}</strong> was placed on Footloft.</p>
+      
+      <div style="background:#f9f9f9; padding:15px; border-radius:4px; margin:20px 0">
+        <h3 style="margin-top:0; font-size:14px; color:#666; text-transform:uppercase">Customer Details</h3>
+        <p style="margin:5px 0"><strong>Name:</strong> ${customerName}</p>
+        <p style="margin:5px 0"><strong>Email:</strong> ${customerEmail}</p>
+        <p style="margin:5px 0"><strong>Phone:</strong> ${address.phone || "N/A"}</p>
+        <p style="margin:5px 0"><strong>Address:</strong> ${address.street}, ${address.city}, ${address.state}</p>
+      </div>
+
+      <h3 style="font-size:14px; color:#666; text-transform:uppercase">Order Items</h3>
+      <table style="width:100%; border-collapse:collapse; margin-bottom:20px">
+        <thead style="background:#f5f5f5">
+          <tr>
+            <th style="padding:8px; text-align:left">Item</th>
+            <th style="padding:8px; text-align:left">Qty</th>
+            <th style="padding:8px; text-align:right">Price</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+
+      <div style="text-align:right; border-top:2px solid #eee; padding-top:10px">
+        <p style="font-size:18px; margin:0"><strong>Total Amount: ₦${amount.toLocaleString()}</strong></p>
+        <p style="font-size:14px; color:#666; margin:5px 0">Payment Method: ${paymentMethod}</p>
+      </div>
+
+      <div style="margin-top:30px; font-size:12px; color:#999; text-align:center; border-top:1px solid #eee; padding-top:20px">
+        <p>Order Date: ${dateStr}</p>
+        <p>This is an automated notification for Footloft Admins.</p>
+      </div>
+    </div>
+  `;
+}
+
+export async function sendAdminOrderNotification(
+  orderId: string,
+): Promise<{ ok: boolean; error?: string }> {
+  if (!process.env.RESEND_API_KEY)
+    return { ok: false, error: "Email not configured" };
+
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: { include: { product: true } } },
+    });
+    if (!order) return { ok: false, error: "Order not found" };
+
+    const address = order.address as AddressJson;
+    const customerName =
+      [address.firstName, address.lastName].filter(Boolean).join(" ") ||
+      "Customer";
+
+    const html = buildAdminNotificationHtml({
+      orderId: order.id,
+      customerName,
+      customerEmail: address.email || "N/A",
+      items: order.items.map((i) => ({
+        name: i.product?.name ?? "Product",
+        quantity: i.quantity,
+        size: i.size,
+        price: i.price,
+      })),
+      amount: order.amount,
+      paymentMethod: order.paymentMethod,
+      address,
+      createdAt: order.createdAt,
+    });
+
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: ADMIN_EMAILS,
+      subject: `🚨 NEW ORDER ALERT: #${order.id.slice(-8)} from ${customerName}`,
+      html,
+    });
+
+    if (error) {
+      console.error("Resend Admin Error:", error);
+      return { ok: false, error: String(error) };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.error("sendAdminOrderNotification error:", e);
     return { ok: false, error: String(e) };
   }
 }

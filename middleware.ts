@@ -1,24 +1,7 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 
-export default auth((req) => {
-  const isAuth = !!req.auth;
-  const isTargetingAdmin =
-    req.nextUrl.pathname.startsWith("/admin") &&
-    req.nextUrl.pathname !== "/admin/login";
-  const userRole = req.auth?.user?.role;
-
-  if (isTargetingAdmin) {
-    if (!isAuth) {
-      return NextResponse.redirect(new URL("/admin/login", req.url));
-    }
-    if (userRole !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-  }
-
-  return NextResponse.next();
-});
+export default NextAuth(authConfig).auth;
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],

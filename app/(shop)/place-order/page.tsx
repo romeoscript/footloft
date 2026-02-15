@@ -18,7 +18,9 @@ const NIGERIAN_STATES = [
 const PlaceOrder = () => {
     const [method, setMethod] = useState<'paystack' | 'cod'>('paystack');
     const [submitting, setSubmitting] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { navigate, cartItems, getCartAmount, delivery_fee, setDeliveryFee, products } = useContext(ShopContext) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [shippingRates, setShippingRates] = useState<any[]>([]);
     const [formData, setFormData] = useState({
         firstName: '',
