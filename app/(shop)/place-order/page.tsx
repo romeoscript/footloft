@@ -3,13 +3,23 @@ import React, { useContext, useState } from 'react'
 import Title from '@/components/Title'
 import CartTotal from '@/components/CartTotal'
 import { ShopContext } from '@/context/ShopContext'
-import { placeOrder } from '@/app/actions'
+import { placeOrder, getShippingRates } from '@/app/actions'
 import { toast } from 'react-toastify'
+import { useEffect } from 'react'
+
+const NIGERIAN_STATES = [
+    "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno",
+    "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT (Abuja)", "Gombe",
+    "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos",
+    "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto",
+    "Taraba", "Yobe", "Zamfara"
+];
 
 const PlaceOrder = () => {
     const [method, setMethod] = useState<'paystack' | 'cod'>('paystack');
     const [submitting, setSubmitting] = useState(false);
-    const { navigate, cartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext);
+    const { navigate, cartItems, getCartAmount, delivery_fee, setDeliveryFee, products } = useContext(ShopContext) as any;
+    const [shippingRates, setShippingRates] = useState<any[]>([]);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -18,14 +28,31 @@ const PlaceOrder = () => {
         city: '',
         state: '',
         zipcode: '',
-        country: '',
+        country: 'Nigeria',
         phone: ''
     });
 
-    const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const fetchRates = async () => {
+            const data = await getShippingRates();
+            setShippingRates(data);
+        };
+        fetchRates();
+    }, []);
+
+    const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const name = event.target.name;
         const value = event.target.value;
         setFormData(data => ({ ...data, [name]: value }));
+
+        if (name === 'state') {
+            const rateObj = shippingRates.find(r => r.state === value);
+            if (rateObj) {
+                setDeliveryFee(rateObj.rate);
+            } else {
+                setDeliveryFee(500); // Default fallback
+            }
+        }
     }
 
     const onSubmitHandler = async (event: React.FormEvent) => {
@@ -123,7 +150,14 @@ const PlaceOrder = () => {
                 <input required onChange={onChangeHandler} name='street' value={formData.street} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='Street' />
                 <div className='flex gap-3'>
                     <input required onChange={onChangeHandler} name='city' value={formData.city} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='City' />
-                    <input required onChange={onChangeHandler} name='state' value={formData.state} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="text" placeholder='State' />
+                    <select required onChange={onChangeHandler} name='state' value={formData.state} className='border border-gray-300 rounded py-1.5 px-3.5 w-full bg-white'>
+                        <option value="">Select State</option>
+                        {NIGERIAN_STATES.map((state) => (
+                            <option key={state} value={state}>
+                                {state}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className='flex gap-3'>
                     <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border border-gray-300 rounded py-1.5 px-3.5 w-full' type="number" placeholder='Zipcode' />

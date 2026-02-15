@@ -235,3 +235,35 @@ export async function placeOrder(orderData: {
     return { success: false, error: "Failed to place order" };
   }
 }
+
+export async function getShippingRates() {
+  return await prisma.shippingRate.findMany({
+    orderBy: {
+      state: "asc",
+    },
+  });
+}
+
+export async function upsertShippingRate(state: string, rate: number) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  return await prisma.shippingRate.upsert({
+    where: { state },
+    update: { rate },
+    create: { state, rate },
+  });
+}
+
+export async function deleteShippingRate(id: string) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  return await prisma.shippingRate.delete({
+    where: { id },
+  });
+}
