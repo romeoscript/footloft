@@ -53,7 +53,6 @@ const AddProduct = () => {
         setLoading(true);
 
         try {
-            const uploadedImageUrls: string[] = [];
             const images = [image1, image2, image3, image4].filter((img) => img !== null);
 
             if (images.length === 0) {
@@ -62,15 +61,16 @@ const AddProduct = () => {
                 return;
             }
 
-            // Upload images to Cloudinary via our upload API
-            for (const image of images) {
+            // Upload images to Cloudinary via our upload API concurrently
+            const uploadPromises = images.map(async (image) => {
                 const formData = new FormData();
                 formData.append("file", image);
                 const uploadResponse = await axios.post("/api/upload", formData);
-                if (uploadResponse.data.success) {
-                    uploadedImageUrls.push(uploadResponse.data.url);
-                }
-            }
+                return uploadResponse.data.success ? uploadResponse.data.url : null;
+            });
+
+            const results = await Promise.all(uploadPromises);
+            const uploadedImageUrls = results.filter((url) => url !== null) as string[];
 
             // Create product
             const productData = {
