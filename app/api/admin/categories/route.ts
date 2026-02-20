@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 export async function GET() {
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
       },
     });
 
+    revalidateTag("categories");
     return NextResponse.json({ success: true, category });
   } catch (error: unknown) {
     console.error("Error creating category:", error);

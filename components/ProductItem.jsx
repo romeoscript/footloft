@@ -27,7 +27,7 @@ const ProductItem = ({ id, image, name, price }) => {
         </p>
         <p className="text-sm font-medium text-[#1a1a1a] mt-1">
           {currency}
-          {price}
+          {Number(price).toLocaleString()}
         </p>
       </div>
     </Link>

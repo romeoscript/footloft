@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 export async function DELETE(
@@ -13,6 +14,7 @@ export async function DELETE(
       },
     });
 
+    revalidateTag("subcategories");
     return NextResponse.json({
       success: true,
       message: "Sub-category deleted",

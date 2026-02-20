@@ -102,7 +102,7 @@ const OrdersContent = () => {
                             <div>
                                 <p className='sm:text-base font-medium'>{item.product?.name}</p>
                                 <div className='flex items-center gap-3 mt-2 text-base text-gray-700'>
-                                    <p className='text-lg'>{currency}{item.price}</p>
+                                    <p className='text-lg'>{currency}{Number(item.price).toLocaleString()}</p>
                                     <p>Quantity: {item.quantity}</p>
                                     <p>Size: {item.size}</p>
                                 </div>

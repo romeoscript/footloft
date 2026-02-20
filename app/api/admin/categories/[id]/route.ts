@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 export async function PATCH(
@@ -41,6 +42,7 @@ export async function PATCH(
       data,
     });
 
+    revalidateTag("categories");
     return NextResponse.json({ success: true, category });
   } catch (error: unknown) {
     console.error("Error updating category:", error);
@@ -76,6 +78,7 @@ export async function DELETE(
       },
     });
 
+    revalidateTag("categories");
     return NextResponse.json({ success: true, message: "Category deleted" });
   } catch (error) {
     console.error("Error deleting category:", error);

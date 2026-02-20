@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
@@ -100,6 +101,7 @@ export async function POST(request: Request) {
       },
     });
 
+    revalidateTag("products");
     return NextResponse.json(
       { success: true, productId: product.id },
       { status: 201 },

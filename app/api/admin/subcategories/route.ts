@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 export async function GET() {
@@ -45,6 +46,7 @@ export async function POST(request: Request) {
       },
     });
 
+    revalidateTag("subcategories");
     return NextResponse.json({ success: true, subCategory });
   } catch (error: unknown) {
     console.error("Error creating sub-category:", error);

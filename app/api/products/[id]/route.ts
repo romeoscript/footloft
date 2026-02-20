@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 export async function GET(
@@ -69,6 +70,7 @@ export async function POST(
       ...product,
       date: product.date != null ? Number(product.date) : null,
     };
+    revalidateTag("products");
     return NextResponse.json({ success: true, product: serializedProduct });
   } catch (error) {
     console.error("Error updating product:", error);
@@ -91,6 +93,7 @@ export async function DELETE(
       },
     });
 
+    revalidateTag("products");
     return NextResponse.json({ success: true, message: "Product deleted" });
   } catch (error) {
     console.error("Error deleting product:", error);
