@@ -18,7 +18,7 @@ export async function GET() {
     }
     const subCategories = await prisma.subCategory.findMany({
       orderBy: {
-        name: "asc",
+        id: "desc",
       },
     });
     return NextResponse.json(subCategories);

@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const subCategories = await prisma.subCategory.findMany({
       orderBy: {
-        name: "asc",
+        id: "desc",
       },
       select: {
         id: true,
