@@ -290,6 +290,8 @@ const EditProduct = ({ params }: { params: Promise<{ id: string }> }) => {
                         "42",
                         "43",
                         "44",
+                        "45",
+                        "46",
                     ].map((size) => (
                         <div
                             key={size}

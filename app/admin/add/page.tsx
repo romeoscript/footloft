@@ -243,7 +243,7 @@ const AddProduct = () => {
             <div>
                 <p className="mb-2 font-medium text-gray-700">Product Sizes</p>
                 <div className="flex gap-3">
-                    {["S", "M", "L", "XL", "XXL", "36", "37", "38", "39", "40", "41", "42", "43", "44"].map(
+                    {["S", "M", "L", "XL", "XXL", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"].map(
                         (size) => (
                             <div
                                 key={size}
